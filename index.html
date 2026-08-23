@@ -9,13 +9,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- FontAwesome -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- html2pdf -->
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js">
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         :root {
@@ -191,7 +188,7 @@
             box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.1);
         }
 
-        /* GRID DE SELECCIÓN DE CASO */
+        /* GRID */
         .cases-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -251,7 +248,7 @@
             color: var(--brand-emerald);
         }
 
-        /* BANNER GRUPO */
+        /* BANNER */
         .group-banner {
             background: linear-gradient(90deg, #f8fafc 0%, #e2e8f0 100%);
             border-radius: var(--radius-md);
@@ -265,7 +262,7 @@
             border: 1px solid var(--border);
         }
 
-        /* SCENARIO BOX */
+        /* SCENARIO */
         .scenario-box {
             background: #f0f9ff;
             border: 1px solid #bae6fd;
@@ -300,7 +297,7 @@
             font-weight: 700;
         }
 
-        /* CADENA PREANALÍTICA */
+        /* SECUENCIA */
         .sequence-list {
             display: flex;
             flex-direction: column;
@@ -406,9 +403,7 @@
         <div class="card">
 
             <div class="section-header-title">
-                <i class="fa-solid fa-users"
-                   style="color: var(--brand-accent);"></i>
-
+                <i class="fa-solid fa-users" style="color: var(--brand-accent);"></i>
                 1. Registro del Equipo de Trabajo
             </div>
 
@@ -466,10 +461,7 @@
 
             </div>
 
-            <div
-                class="section-header-title"
-                style="margin-top: 28px;"
-            >
+            <div class="section-header-title" style="margin-top: 28px;">
 
                 <i
                     class="fa-solid fa-folder-open"
@@ -573,6 +565,7 @@
 
     </div>
 
+
     <!-- VISTA 2 -->
     <div id="view-activity" class="view-panel">
 
@@ -618,7 +611,9 @@
 
         </div>
 
+
         <!-- PARTE I -->
+
         <div class="card">
 
             <div class="section-header-title">
@@ -636,7 +631,9 @@
 
         </div>
 
+
         <!-- PARTE II -->
+
         <div class="card">
 
             <div class="section-header-title">
@@ -663,7 +660,7 @@
                 </em>
             </p>
 
-            <!-- 1 -->
+
             <div class="form-group">
 
                 <label class="form-label">
@@ -678,8 +675,8 @@
                         margin-bottom: 12px;
                     "
                 >
-                    Asigne el número de orden (1 a 7) que corresponde a cada paso
-                    para reconstruir la secuencia correcta:
+                    Asigne el número de orden (1 a 7) que corresponde a cada
+                    paso para reconstruir la secuencia correcta:
                 </p>
 
                 <div
@@ -689,7 +686,7 @@
 
             </div>
 
-            <!-- 2 -->
+
             <div
                 class="form-group"
                 style="margin-top: 24px;"
@@ -709,8 +706,8 @@
                         margin-bottom: 8px;
                     "
                 >
-                    En sus palabras: ¿Qué hace que una toma de muestra sea un
-                    procedimiento técnico bien hecho y no un simple trámite?
+                    En sus palabras: ¿Qué hace que una toma de muestra sea
+                    un procedimiento técnico bien hecho y no un simple trámite?
                 </p>
 
                 <textarea
@@ -721,7 +718,7 @@
 
             </div>
 
-            <!-- 3 -->
+
             <div
                 class="form-group"
                 style="margin-top: 24px;"
@@ -799,6 +796,7 @@
 
             </div>
 
+
             <div style="margin-top: 28px;">
 
                 <button
@@ -817,11 +815,12 @@
 
 </div>
 
+
 <script>
 
     /* ============================================================
-       DATOS DE LOS CASOS
-       ============================================================ */
+       DATOS
+    ============================================================ */
 
     const CASES_DATA = {
 
@@ -835,19 +834,23 @@
             questions: [
                 {
                     id: "q1_1",
-                    text: "1. Identificación de la necesidad clínica: ¿Qué sitio anatómico específico necesitamos investigar en este paciente y cuál sería el espécimen ideal para dicho sitio?"
+                    text:
+                        "1. Identificación de la necesidad clínica: ¿Qué sitio anatómico específico necesitamos investigar en este paciente y cuál sería el espécimen ideal para dicho sitio?"
                 },
                 {
                     id: "q1_2",
-                    text: "2. Análisis de la muestra recibida: El material recibido proviene de la boca (saliva). ¿Por qué no podemos asumirlo como una muestra adecuada para estudiar las vías respiratorias inferiores?"
+                    text:
+                        "2. Análisis de la muestra recibida: El material recibido proviene de la boca (saliva). ¿Por qué no podemos asumirlo como una muestra adecuada para estudiar las vías respiratorias inferiores?"
                 },
                 {
                     id: "q1_3",
-                    text: "3. Concepto clave (Representatividad): ¿Qué condición debe cumplir una muestra para ser considerada representativa del proceso infeccioso?"
+                    text:
+                        "3. Concepto clave (Representatividad): ¿Qué condición debe cumplir una muestra para ser considerada representativa del proceso infeccioso?"
                 },
                 {
                     id: "q1_4",
-                    text: "4. Consecuencia microbiológica: Si procesamos una muestra rica en saliva y microbiota oral en lugar de secreción profunda, ¿qué problema de interpretación se genera en el laboratorio?"
+                    text:
+                        "4. Consecuencia microbiológica: Si procesamos una muestra rica en saliva y microbiota oral en lugar de secreción profunda, ¿qué problema de interpretación se genera en el laboratorio?"
                 }
             ],
 
@@ -860,6 +863,7 @@
                 'Para seleccionar una muestra microbiológica adecuada, no basta con saber la enfermedad; debemos verificar que el espécimen sea <input type="text" class="fill-input" id="fill_1" placeholder="palabra clave"> del sitio anatómico que queremos investigar.'
         },
 
+
         2: {
             title: "CASO 2 — INFECCIÓN URINARIA",
             focus: "Obtención de la Muestra y Prevención de Contaminación",
@@ -870,15 +874,18 @@
             questions: [
                 {
                     id: "q2_1",
-                    text: "1. Verificación previa: Antes de tomar la muestra en cualquiera de los dos pacientes, ¿qué verificaciones iniciales (paciente, solicitud, insumos) debemos realizar obligatoriamente?"
+                    text:
+                        "1. Verificación previa: Antes de tomar la muestra en cualquiera de los dos pacientes, ¿qué verificaciones iniciales (paciente, solicitud, insumos) debemos realizar obligatoriamente?"
                 },
                 {
                     id: "q2_2",
-                    text: "2. Control de contaminación en Paciente A: En la micción espontánea, ¿qué instrucciones de preparación e higiene de la paciente son críticas para evitar la contaminación por flora genital?"
+                    text:
+                        "2. Control de contaminación en Paciente A: En la micción espontánea, ¿qué instrucciones de preparación e higiene de la paciente son críticas para evitar la contaminación por flora genital?"
                 },
                 {
                     id: "q2_3",
-                    text: "3. Técnica de obtención en Paciente B: En el paciente con sonda vesical, ¿de dónde y cómo debemos tomar la muestra para urocultivo? ¿Por qué está contraindicado tomarla de la bolsa recolectora?"
+                    text:
+                        "3. Técnica de obtención en Paciente B: En el paciente con sonda vesical, ¿de dónde y cómo debemos tomar la muestra para urocultivo? ¿Por qué está contraindicado tomarla de la bolsa recolectora?"
                 }
             ],
 
@@ -907,6 +914,7 @@
                 'Una muestra correcta no depende solo del tipo de espécimen (orina), sino de adecuar la (o el) <input type="text" class="fill-input" id="fill_2a" placeholder="técnica / método"> de obtención a la condición particular del paciente para evitar la <input type="text" class="fill-input" id="fill_2b" placeholder="efecto no deseado">.'
         },
 
+
         3: {
             title: "CASO 3 — INFECCIÓN GASTROINTESTINAL",
             focus: "Identificación, Trazabilidad, Conservación y Transporte",
@@ -917,15 +925,18 @@
             questions: [
                 {
                     id: "q3_1",
-                    text: "1. Trazabilidad: ¿Por qué una inconsistencia entre los datos del recipiente y la solicitud médica invalida el procesamiento de la muestra?"
+                    text:
+                        "1. Trazabilidad: ¿Por qué una inconsistencia entre los datos del recipiente y la solicitud médica invalida el procesamiento de la muestra?"
                 },
                 {
                     id: "q3_2",
-                    text: "2. Integridad y Conservación: ¿Qué le sucede a los microorganismos patógenos y a la microbiota acompañante cuando la muestra fecal permanece horas a temperatura ambiente sin conservación?"
+                    text:
+                        "2. Integridad y Conservación: ¿Qué le sucede a los microorganismos patógenos y a la microbiota acompañante cuando la muestra fecal permanece horas a temperatura ambiente sin conservación?"
                 },
                 {
                     id: "q3_3",
-                    text: "3. El rol del Transporte: ¿Por qué el transporte se considera parte crítica de la fase preanalítica y no un simple traslado físico?"
+                    text:
+                        "3. El rol del Transporte: ¿Por qué el transporte se considera parte crítica de la fase preanalítica y no un simple traslado físico?"
                 }
             ],
 
@@ -938,6 +949,7 @@
                 'Una muestra correctamente obtenida pierde su utilidad diagnóstica si se interrumpe la <input type="text" class="fill-input" id="fill_3a" placeholder="condición 1"> del paciente o si fallan las condiciones de <input type="text" class="fill-input" id="fill_3b" placeholder="condición 2"> y <input type="text" class="fill-input" id="fill_3c" placeholder="condición 3"> durante el traslado.'
         },
 
+
         4: {
             title: "CASO 4 — INFECCIÓN CUTÁNEA",
             focus: "Calidad del Espécimen y Bioseguridad en la Toma",
@@ -948,15 +960,18 @@
             questions: [
                 {
                     id: "q4_1",
-                    text: "1. Evaluación de la Muestra (Representatividad): ¿Por qué el hisopado superficial de piel no representa el proceso infeccioso profundo de la herida? ¿Qué material se debió aspirar/tomar?"
+                    text:
+                        "1. Evaluación de la Muestra (Representatividad): ¿Por qué el hisopado superficial de piel no representa el proceso infeccioso profundo de la herida? ¿Qué material se debió aspirar/tomar?"
                 },
                 {
                     id: "q4_2",
-                    text: "2. Evaluación de Bioseguridad (Riesgo y Protección): ¿El uso de guantes reemplaza la higiene de manos antes y después del procedimiento? Justifiquen. ¿Qué otro EPP era necesario?"
+                    text:
+                        "2. Evaluación de Bioseguridad (Riesgo y Protección): ¿El uso de guantes reemplaza la higiene de manos antes y después del procedimiento? Justifiquen. ¿Qué otro EPP era necesario?"
                 },
                 {
                     id: "q4_3",
-                    text: "3. Manejo del Incidente (Contención): Ante el derrame y fuga de la muestra en el contenedor de traslado, ¿cuáles son los dos aspectos que se vieron comprometidos simultáneamente?"
+                    text:
+                        "3. Manejo del Incidente (Contención): Ante el derrame y fuga de la muestra en el contenedor de traslado, ¿cuáles son los dos aspectos que se vieron comprometidos simultáneamente?"
                 }
             ],
 
@@ -984,12 +999,13 @@
             consolidationText:
                 'El procedimiento de toma de muestra debe garantizar de forma simultánea la <input type="text" class="fill-input" id="fill_4a" placeholder="condición espécimen"> del espécimen y la <input type="text" class="fill-input" id="fill_4b" placeholder="condición personal"> del personal de salud mediante el control de riesgos biológicos.'
         }
+
     };
 
 
     /* ============================================================
        CADENA PREANALÍTICA
-       ============================================================ */
+    ============================================================ */
 
     const SEQUENCE_ITEMS = [
 
@@ -1033,7 +1049,7 @@
 
     /* ============================================================
        ESTADO
-       ============================================================ */
+    ============================================================ */
 
     let selectedCaseId = null;
 
@@ -1044,8 +1060,8 @@
 
 
     /* ============================================================
-       SELECCIÓN DEL CASO
-       ============================================================ */
+       SELECCIÓN DE CASO
+    ============================================================ */
 
     function selectCase(caseId) {
 
@@ -1053,9 +1069,7 @@
 
         document
             .querySelectorAll('.case-card')
-            .forEach(card => {
-                card.classList.remove('selected');
-            });
+            .forEach(c => c.classList.remove('selected'));
 
         document
             .getElementById(`case-card-${caseId}`)
@@ -1064,6 +1078,10 @@
         checkRegistrationForm();
     }
 
+
+    /* ============================================================
+       VALIDACIÓN REGISTRO
+    ============================================================ */
 
     function checkRegistrationForm() {
 
@@ -1082,15 +1100,12 @@
 
     document
         .getElementById('inputGroupNum')
-        .addEventListener(
-            'input',
-            checkRegistrationForm
-        );
+        .addEventListener('input', checkRegistrationForm);
 
 
     /* ============================================================
-       INICIO DE LA ACTIVIDAD
-       ============================================================ */
+       INICIO DE ACTIVIDAD
+    ============================================================ */
 
     function startActivity() {
 
@@ -1101,36 +1116,37 @@
                 .trim();
 
         groupData.members = [
+
             document.getElementById('member1').value.trim(),
+
             document.getElementById('member2').value.trim(),
+
             document.getElementById('member3').value.trim(),
+
             document.getElementById('member4').value.trim()
-        ].filter(
-            member => member !== ""
-        );
+
+        ].filter(m => m !== "");
 
 
         document
             .getElementById('displayGroupTitle')
-            .innerText =
-            groupData.number;
+            .innerText = groupData.number;
 
 
         document
             .getElementById('displayMembers')
             .innerText =
-            "Integrantes: " +
-            (
-                groupData.members.join(', ')
-                ||
-                "No especificados"
-            );
+                "Integrantes: " +
+                (
+                    groupData.members.join(', ') ||
+                    "No especificados"
+                );
 
 
         document
             .getElementById('displayCaseTag')
             .innerText =
-            `Caso Clínico Asignado: N° ${selectedCaseId}`;
+                `Caso Clínico Asignado: N° ${selectedCaseId}`;
 
 
         renderCaseContent(selectedCaseId);
@@ -1142,6 +1158,7 @@
             .getElementById('view-registration')
             .classList.remove('active');
 
+
         document
             .getElementById('view-activity')
             .classList.add('active');
@@ -1151,12 +1168,13 @@
             top: 0,
             behavior: 'smooth'
         });
+
     }
 
 
     /* ============================================================
-       RENDERIZAR CASO
-       ============================================================ */
+       RENDER CASO
+    ============================================================ */
 
     function renderCaseContent(caseId) {
 
@@ -1200,17 +1218,17 @@
         `;
 
 
-        data.questions.forEach(question => {
+        data.questions.forEach(q => {
 
             html += `
                 <div class="form-group">
 
                     <label class="form-label">
-                        ${question.text}
+                        ${q.text}
                     </label>
 
                     <textarea
-                        id="${question.id}"
+                        id="${q.id}"
                         class="form-textarea"
                         placeholder="Escriba la respuesta razonada del equipo..."
                     ></textarea>
@@ -1237,11 +1255,9 @@
                         <tr>
             `;
 
-            data.tableHeaders.forEach(header => {
+            data.tableHeaders.forEach(h => {
 
-                html += `
-                    <th>${header}</th>
-                `;
+                html += `<th>${h}</th>`;
 
             });
 
@@ -1259,9 +1275,7 @@
                     <tr>
 
                         <td>
-                            <strong>
-                                ${row.col1}
-                            </strong>
+                            <strong>${row.col1}</strong>
                         </td>
 
                         <td>
@@ -1290,9 +1304,9 @@
 
             html += `
                     </tbody>
-
                 </table>
             `;
+
         }
 
 
@@ -1341,12 +1355,13 @@
 
 
         container.innerHTML = html;
+
     }
 
 
     /* ============================================================
-       RENDERIZAR SECUENCIA
-       ============================================================ */
+       RENDER SECUENCIA
+    ============================================================ */
 
     function renderSequenceList() {
 
@@ -1361,8 +1376,7 @@
             const div =
                 document.createElement('div');
 
-            div.className =
-                'sequence-item';
+            div.className = 'sequence-item';
 
 
             div.innerHTML = `
@@ -1400,14 +1414,15 @@
             container.appendChild(div);
 
         });
+
     }
 
 
     /* ============================================================
-       UTILIDADES PARA PDF
-       ============================================================ */
+       FUNCIONES AUXILIARES PARA PDF
+    ============================================================ */
 
-    function escapeHtml(value) {
+    function escapeHTML(value) {
 
         if (value === null || value === undefined) {
             return '';
@@ -1419,10 +1434,18 @@
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#039;');
+
     }
 
 
-    function stripHtml(html) {
+    function escapeHTMLWithBreaks(value) {
+
+        return escapeHTML(value)
+            .replace(/\r?\n/g, '<br>');
+    }
+
+
+    function stripHTML(html) {
 
         const temp =
             document.createElement('div');
@@ -1432,139 +1455,118 @@
         return temp.textContent ||
                temp.innerText ||
                '';
+
     }
 
 
-    function waitForRender() {
+    function getInputValue(id) {
 
-        return new Promise(resolve => {
+        const element =
+            document.getElementById(id);
 
-            requestAnimationFrame(() => {
+        return element
+            ? element.value.trim()
+            : '';
 
-                requestAnimationFrame(() => {
-
-                    setTimeout(resolve, 300);
-
-                });
-
-            });
-
-        });
     }
 
 
     /* ============================================================
-       GENERACIÓN PDF — VERSIÓN CORREGIDA
-       ============================================================ */
+       GENERACIÓN DEL PDF
+       
+       ESTA ES LA PARTE CORREGIDA.
+    ============================================================ */
 
     async function submitWork() {
-
-        const grandConclusion =
-            document
-                .getElementById('inputGrandConclusion')
-                .value
-                .trim();
-
-
-        const vfSelection =
-            document.querySelector(
-                'input[name="vf_option"]:checked'
-            );
-
-
-        if (!grandConclusion || !vfSelection) {
-
-            alert(
-                "Por favor completa la Gran Conclusión de Aula y selecciona tu respuesta de Falso o Verdadero en la PARTE II antes de generar el PDF."
-            );
-
-            return;
-        }
-
-
-        if (!selectedCaseId) {
-
-            alert(
-                "No se ha seleccionado un caso clínico."
-            );
-
-            return;
-        }
-
-
-        /* --------------------------------------------------------
-           COMPROBAR QUE html2pdf ESTÁ DISPONIBLE
-           -------------------------------------------------------- */
-
-        if (
-            typeof html2pdf === 'undefined'
-        ) {
-
-            alert(
-                "No se pudo cargar la librería de generación PDF. Verifica tu conexión a Internet y vuelve a cargar la página."
-            );
-
-            return;
-        }
-
-
-        const caseData =
-            CASES_DATA[selectedCaseId];
-
-
-        /* --------------------------------------------------------
-           BOTÓN
-           -------------------------------------------------------- */
-
-        const clickedButton =
-            document.querySelector(
-                '#view-activity .btn-primary'
-            );
-
-        const originalButtonHTML =
-            clickedButton
-                ? clickedButton.innerHTML
-                : '';
-
-
-        if (clickedButton) {
-
-            clickedButton.disabled = true;
-
-            clickedButton.innerHTML =
-                '<i class="fa-solid fa-spinner fa-spin"></i> Generando PDF...';
-        }
-
-
-        let pdfWrapper = null;
-
 
         try {
 
             /* ----------------------------------------------------
-               CREAR CONTENEDOR PDF
-               ---------------------------------------------------- */
+               VALIDACIONES
+            ---------------------------------------------------- */
 
-            pdfWrapper =
+            const grandConclusion =
+                getInputValue('inputGrandConclusion');
+
+            const vfSelection =
+                document.querySelector(
+                    'input[name="vf_option"]:checked'
+                );
+
+
+            if (!grandConclusion || !vfSelection) {
+
+                alert(
+                    "Por favor completa la Gran Conclusión de Aula y selecciona tu respuesta de Falso o Verdadero en la PARTE II antes de generar el PDF."
+                );
+
+                return;
+            }
+
+
+            if (!selectedCaseId) {
+
+                alert(
+                    "No se ha seleccionado ningún caso clínico."
+                );
+
+                return;
+            }
+
+
+            /* ----------------------------------------------------
+               VERIFICAR HTML2PDF
+            ---------------------------------------------------- */
+
+            if (
+                typeof html2pdf === 'undefined'
+            ) {
+
+                alert(
+                    "La librería de generación PDF no pudo cargarse. Verifica tu conexión a Internet y vuelve a intentarlo."
+                );
+
+                return;
+            }
+
+
+            const caseData =
+                CASES_DATA[selectedCaseId];
+
+
+            /* ----------------------------------------------------
+               CREAR CONTENEDOR
+            ---------------------------------------------------- */
+
+            const pdfWrapper =
                 document.createElement('div');
 
 
-            pdfWrapper.id =
-                'pdf-generation-container';
-
-
             /*
-             * MUY IMPORTANTE:
+             * IMPORTANTE:
              *
-             * No usamos display:none.
-             * No usamos visibility:hidden.
+             * Antes el elemento solamente existía en memoria:
              *
-             * El elemento debe existir físicamente en el DOM
-             * para que html2canvas pueda pintarlo.
+             * document.createElement('div')
+             *
+             * y luego:
+             *
+             * html2pdf().from(pdfWrapper)
+             *
+             *
+             * En determinados navegadores / versiones de
+             * html2canvas esto puede producir un canvas vacío.
+             *
+             * Ahora el elemento se incorpora temporalmente al DOM.
              */
 
+
+            pdfWrapper.id =
+                'temporary-pdf-document';
+
+
             pdfWrapper.style.position =
-                'fixed';
+                'absolute';
 
             pdfWrapper.style.left =
                 '-100000px';
@@ -1578,34 +1580,31 @@
             pdfWrapper.style.minHeight =
                 '1123px';
 
-            pdfWrapper.style.backgroundColor =
+            pdfWrapper.style.background =
                 '#ffffff';
-
-            pdfWrapper.style.padding =
-                '38px';
-
-            pdfWrapper.style.margin =
-                '0';
-
-            pdfWrapper.style.zIndex =
-                '-9999';
-
-            pdfWrapper.style.overflow =
-                'visible';
-
-            pdfWrapper.style.fontFamily =
-                'Arial, Helvetica, sans-serif';
 
             pdfWrapper.style.color =
                 '#0f172a';
 
-            pdfWrapper.style.boxSizing =
-                'border-box';
+            pdfWrapper.style.padding =
+                '30px';
+
+            pdfWrapper.style.fontFamily =
+                'Arial, Helvetica, sans-serif';
+
+            pdfWrapper.style.fontSize =
+                '12px';
+
+            pdfWrapper.style.lineHeight =
+                '1.45';
+
+            pdfWrapper.style.zIndex =
+                '-1';
 
 
             /* ----------------------------------------------------
-               CABECERA PDF
-               ---------------------------------------------------- */
+               CONSTRUIR HTML PDF
+            ---------------------------------------------------- */
 
             let pdfHTML = `
 
@@ -1656,7 +1655,6 @@
                     style="
                         background-color: #f8fafc;
                         border: 1px solid #e2e8f0;
-                        border-radius: 8px;
                         padding: 14px;
                         margin-bottom: 20px;
                     "
@@ -1679,21 +1677,18 @@
                         "
                     >
                         <strong>Grupo:</strong>
-                        ${escapeHtml(groupData.number)}
+                        ${escapeHTML(groupData.number)}
                     </p>
 
                     <p style="font-size: 12px;">
-
                         <strong>Integrantes:</strong>
-
                         ${
                             groupData.members.length
-                                ? escapeHtml(
-                                    groupData.members.join(', ')
-                                  )
-                                : 'Sin especificar'
+                            ? escapeHTML(
+                                groupData.members.join(', ')
+                            )
+                            : 'Sin especificar'
                         }
-
                     </p>
 
                 </div>
@@ -1712,8 +1707,9 @@
                         "
                     >
                         PARTE I:
-                        ${escapeHtml(caseData.title)}
+                        ${escapeHTML(caseData.title)}
                     </h2>
+
 
                     <p
                         style="
@@ -1723,8 +1719,9 @@
                         "
                     >
                         <strong>Enfoque:</strong>
-                        ${escapeHtml(caseData.focus)}
+                        ${escapeHTML(caseData.focus)}
                     </p>
+
 
                     <div
                         style="
@@ -1734,18 +1731,13 @@
                             font-size: 11px;
                             color: #0c4a6e;
                             margin-bottom: 16px;
-                            line-height: 1.5;
                         "
                     >
 
-                        <strong>
-                            Situación Clínica:
-                        </strong>
+                        <strong>Situación Clínica:</strong><br>
 
-                        <br>
-
-                        ${escapeHtml(
-                            stripHtml(caseData.scenario)
+                        ${escapeHTML(
+                            stripHTML(caseData.scenario)
                         )}
 
                     </div>
@@ -1754,20 +1746,12 @@
 
             /* ----------------------------------------------------
                PREGUNTAS
-               ---------------------------------------------------- */
+            ---------------------------------------------------- */
 
-            caseData.questions.forEach(question => {
-
-                const element =
-                    document.getElementById(
-                        question.id
-                    );
-
+            caseData.questions.forEach(q => {
 
                 const answer =
-                    element
-                        ? element.value.trim()
-                        : '';
+                    getInputValue(q.id);
 
 
                 pdfHTML += `
@@ -1785,11 +1769,11 @@
                                 font-weight: 700;
                                 color: #0f172a;
                                 margin-bottom: 4px;
-                                line-height: 1.45;
                             "
                         >
-                            ${escapeHtml(question.text)}
+                            ${escapeHTML(q.text)}
                         </p>
+
 
                         <div
                             style="
@@ -1797,20 +1781,15 @@
                                 background: #fafafa;
                                 border: 1px solid #e2e8f0;
                                 padding: 8px 12px;
-                                border-radius: 6px;
                                 min-height: 35px;
                                 color: #334155;
-                                line-height: 1.5;
-                                white-space: normal;
-                                overflow-wrap: break-word;
                             "
                         >
 
                             ${
                                 answer
-                                    ? escapeHtml(answer)
-                                        .replace(/\n/g, '<br>')
-                                    : '<em style="color:#94a3b8">Sin respuesta</em>'
+                                ? escapeHTMLWithBreaks(answer)
+                                : '<em style="color:#94a3b8">Sin respuesta</em>'
                             }
 
                         </div>
@@ -1824,7 +1803,7 @@
 
             /* ----------------------------------------------------
                TABLA
-               ---------------------------------------------------- */
+            ---------------------------------------------------- */
 
             if (caseData.hasTable) {
 
@@ -1847,7 +1826,6 @@
                             border-collapse: collapse;
                             font-size: 10px;
                             margin-bottom: 16px;
-                            page-break-inside: avoid;
                         "
                     >
 
@@ -1861,21 +1839,18 @@
                 `;
 
 
-                caseData.tableHeaders.forEach(header => {
+                caseData.tableHeaders.forEach(h => {
 
                     pdfHTML += `
-
                         <th
                             style="
                                 border: 1px solid #cbd5e1;
                                 padding: 6px;
                                 text-align: left;
-                                vertical-align: top;
                             "
                         >
-                            ${escapeHtml(header)}
+                            ${escapeHTML(h)}
                         </th>
-
                     `;
 
                 });
@@ -1891,26 +1866,11 @@
 
                 caseData.tableRows.forEach(row => {
 
-                    const element2 =
-                        document.getElementById(
-                            row.id2
-                        );
-
-                    const element3 =
-                        document.getElementById(
-                            row.id3
-                        );
-
-
                     const val2 =
-                        element2
-                            ? element2.value.trim()
-                            : '';
+                        getInputValue(row.id2);
 
                     const val3 =
-                        element3
-                            ? element3.value.trim()
-                            : '';
+                        getInputValue(row.id3);
 
 
                     pdfHTML += `
@@ -1921,11 +1881,10 @@
                                 style="
                                     border: 1px solid #cbd5e1;
                                     padding: 6px;
-                                    vertical-align: top;
                                 "
                             >
                                 <strong>
-                                    ${escapeHtml(row.col1)}
+                                    ${escapeHTML(row.col1)}
                                 </strong>
                             </td>
 
@@ -1933,20 +1892,18 @@
                                 style="
                                     border: 1px solid #cbd5e1;
                                     padding: 6px;
-                                    vertical-align: top;
                                 "
                             >
-                                ${escapeHtml(val2 || '-')}
+                                ${escapeHTML(val2 || '-')}
                             </td>
 
                             <td
                                 style="
                                     border: 1px solid #cbd5e1;
                                     padding: 6px;
-                                    vertical-align: top;
                                 "
                             >
-                                ${escapeHtml(val3 || '-')}
+                                ${escapeHTML(val3 || '-')}
                             </td>
 
                         </tr>
@@ -1957,11 +1914,8 @@
 
 
                 pdfHTML += `
-
                         </tbody>
-
                     </table>
-
                 `;
 
             }
@@ -1969,20 +1923,12 @@
 
             /* ----------------------------------------------------
                DECISIÓN
-               ---------------------------------------------------- */
+            ---------------------------------------------------- */
 
             if (caseData.decisionPrompt) {
 
-                const decisionElement =
-                    document.getElementById(
-                        'decision_text'
-                    );
-
-
-                const decisionValue =
-                    decisionElement
-                        ? decisionElement.value.trim()
-                        : '';
+                const decVal =
+                    getInputValue('decision_text');
 
 
                 pdfHTML += `
@@ -2002,10 +1948,11 @@
                                 margin-bottom: 4px;
                             "
                         >
-                            ${escapeHtml(
+                            ${escapeHTML(
                                 caseData.decisionPrompt
                             )}
                         </p>
+
 
                         <div
                             style="
@@ -2013,18 +1960,14 @@
                                 background: #fff5f5;
                                 border: 1px solid #fecaca;
                                 padding: 8px 12px;
-                                border-radius: 6px;
                                 color: #991b1b;
-                                line-height: 1.5;
                             "
                         >
 
                             ${
-                                decisionValue
-                                    ? escapeHtml(
-                                        decisionValue
-                                      ).replace(/\n/g, '<br>')
-                                    : '<em style="color:#94a3b8">Sin decisión registrada</em>'
+                                decVal
+                                ? escapeHTMLWithBreaks(decVal)
+                                : '<em style="color:#94a3b8">Sin decisión registrada</em>'
                             }
 
                         </div>
@@ -2038,7 +1981,11 @@
 
             /* ----------------------------------------------------
                CONSOLIDACIÓN
-               ---------------------------------------------------- */
+            ---------------------------------------------------- */
+
+            let consolidationText =
+                caseData.consolidationText;
+
 
             const fillIds = [
                 'fill_1',
@@ -2052,105 +1999,107 @@
             ];
 
 
-            const fillValues = {};
-
-
             fillIds.forEach(id => {
 
-                const element =
+                const input =
                     document.getElementById(id);
 
-                fillValues[id] =
-                    element
-                        ? element.value.trim()
-                        : '';
+
+                if (!input) {
+                    return;
+                }
+
+
+                const value =
+                    input.value.trim();
+
+
+                const safeValue =
+                    escapeHTML(value || '______');
+
+
+                consolidationText =
+                    consolidationText.replace(
+                        input.outerHTML,
+                        `<u><strong>${safeValue}</strong></u>`
+                    );
 
             });
 
 
-            let consolidTextPDF =
-                caseData.consolidationText;
+            /*
+             * Como el HTML almacenado puede no coincidir
+             * exactamente con outerHTML del navegador,
+             * hacemos además una sustitución directa
+             * mediante los identificadores.
+             */
 
+            const consolidationInputs = {
 
-            const replacements = {
+                fill_1: getInputValue('fill_1'),
 
-                'fill_1':
-                    fillValues.fill_1,
+                fill_2a: getInputValue('fill_2a'),
 
-                'fill_2a':
-                    fillValues.fill_2a,
+                fill_2b: getInputValue('fill_2b'),
 
-                'fill_2b':
-                    fillValues.fill_2b,
+                fill_3a: getInputValue('fill_3a'),
 
-                'fill_3a':
-                    fillValues.fill_3a,
+                fill_3b: getInputValue('fill_3b'),
 
-                'fill_3b':
-                    fillValues.fill_3b,
+                fill_3c: getInputValue('fill_3c'),
 
-                'fill_3c':
-                    fillValues.fill_3c,
+                fill_4a: getInputValue('fill_4a'),
 
-                'fill_4a':
-                    fillValues.fill_4a,
-
-                'fill_4b':
-                    fillValues.fill_4b
+                fill_4b: getInputValue('fill_4b')
 
             };
 
 
-            consolidTextPDF =
-                consolidTextPDF.replace(
-                    /<input[^>]*id="([^"]+)"[^>]*>/g,
-                    function(match, id) {
+            Object.entries(consolidationInputs)
+                .forEach(([id, value]) => {
 
-                        const value =
-                            replacements[id] || '______';
-
-                        return `
-                            <u>
-                                <strong>
-                                    ${escapeHtml(value)}
-                                </strong>
-                            </u>
-                        `;
-
-                    }
-                );
+                    const pattern =
+                        new RegExp(
+                            `<input[^>]*id=["']${id}["'][^>]*>`,
+                            'i'
+                        );
 
 
-            consolidTextPDF =
-                stripHtml(consolidTextPDF);
+                    consolidationText =
+                        consolidationText.replace(
+                            pattern,
+                            `<u><strong>${
+                                escapeHTML(value || '______')
+                            }</strong></u>`
+                        );
+
+                });
 
 
             pdfHTML += `
 
-                <div
-                    style="
-                        background-color: #fffdf5;
-                        border-left: 4px solid #f59e0b;
-                        padding: 10px 14px;
-                        border-radius: 6px;
-                        margin-top: 14px;
-                        font-size: 11px;
-                        color: #78350f;
-                        line-height: 1.5;
-                        page-break-inside: avoid;
-                    "
-                >
+                    <div
+                        style="
+                            background-color: #fffbeef5;
+                            border-left: 4px solid #f59e0b;
+                            padding: 10px 14px;
+                            margin-top: 14px;
+                            font-size: 11px;
+                            color: #78350f;
+                            page-break-inside: avoid;
+                        "
+                    >
 
-                    <strong>
-                        Lo aprendido en el Caso
-                        (Cierre de Consolidación):
-                    </strong>
+                        <strong>
+                            Lo aprendido en el Caso
+                            (Cierre de Consolidación):
+                        </strong>
 
-                    <br>
+                        <br>
 
-                    ${escapeHtml(consolidTextPDF)}
+                        ${consolidationText}
 
-                </div>
+                    </div>
 
                 </div>
             `;
@@ -2158,13 +2107,14 @@
 
             /* ----------------------------------------------------
                PARTE II
-               ---------------------------------------------------- */
+            ---------------------------------------------------- */
 
             pdfHTML += `
 
                 <div
                     style="
                         margin-top: 24px;
+                        page-break-inside: avoid;
                     "
                 >
 
@@ -2182,6 +2132,7 @@
                         Integración y Cierre General de Clase
                     </h2>
 
+
                     <p
                         style="
                             font-size: 11px;
@@ -2192,15 +2143,14 @@
                         1. Orden Secuencial de la Cadena Preanalítica:
                     </p>
 
+
                     <div
                         style="
                             font-size: 10px;
                             background: #f8fafc;
                             border: 1px solid #e2e8f0;
                             padding: 10px;
-                            border-radius: 6px;
                             margin-bottom: 14px;
-                            line-height: 1.6;
                         "
                     >
             `;
@@ -2208,43 +2158,36 @@
 
             document
                 .querySelectorAll('.seq-select')
-                .forEach(select => {
+                .forEach(sel => {
 
                     const code =
-                        select.getAttribute(
-                            'data-code'
-                        );
+                        sel.getAttribute('data-code');
 
-                    const position =
-                        select.value || '?';
+                    const pos =
+                        sel.value || '?';
 
-
-                    const item =
+                    const itemObj =
                         SEQUENCE_ITEMS.find(
-                            item =>
-                                item.code === code
+                            i => i.code === code
                         );
-
-
-                    if (!item) {
-                        return;
-                    }
 
 
                     pdfHTML += `
 
-                        <div
+                        <span
                             style="
-                                display: block;
-                                margin-bottom: 4px;
+                                display:inline-block;
+                                margin-right:12px;
+                                margin-bottom:4px;
                             "
                         >
                             <strong>
-                                [ ${escapeHtml(position)}° ]
+                                [ ${escapeHTML(pos)}° ]
                             </strong>
 
-                            ${escapeHtml(item.name)}
-                        </div>
+                            ${escapeHTML(itemObj.name)}
+
+                        </span>
 
                     `;
 
@@ -2256,90 +2199,78 @@
                     </div>
 
 
-                    <div
-                        style="
-                            margin-bottom: 14px;
-                            page-break-inside: avoid;
-                        "
-                    >
+                    <div style="margin-bottom:14px;">
 
                         <p
                             style="
-                                font-size: 11px;
-                                font-weight: 700;
-                                color: #0f172a;
-                                margin-bottom: 4px;
+                                font-size:11px;
+                                font-weight:700;
+                                color:#0f172a;
+                                margin-bottom:4px;
                             "
                         >
                             2. Gran Conclusión de Aula:
                         </p>
 
+
                         <div
                             style="
-                                font-size: 11px;
-                                background: #fafafa;
-                                border: 1px solid #e2e8f0;
-                                padding: 8px 12px;
-                                border-radius: 6px;
-                                color: #334155;
-                                line-height: 1.5;
+                                font-size:11px;
+                                background:#fafafa;
+                                border:1px solid #e2e8f0;
+                                padding:8px 12px;
+                                color:#334155;
                             "
                         >
-                            ${escapeHtml(
+                            ${escapeHTMLWithBreaks(
                                 grandConclusion
-                            ).replace(/\n/g, '<br>')}
+                            )}
                         </div>
 
                     </div>
 
 
-                    <div
-                        style="
-                            margin-bottom: 14px;
-                            page-break-inside: avoid;
-                        "
-                    >
+                    <div style="margin-bottom:14px;">
 
                         <p
                             style="
-                                font-size: 11px;
-                                font-weight: 700;
-                                color: #0f172a;
-                                margin-bottom: 4px;
+                                font-size:11px;
+                                font-weight:700;
+                                color:#0f172a;
+                                margin-bottom:4px;
                             "
                         >
-                            3. Verificación de Premisa
-                            Fundamental (V/F):
+                            3. Verificación de Premisa Fundamental (V/F):
                         </p>
+
 
                         <div
                             style="
-                                font-size: 11px;
-                                background: #f8fafc;
-                                border: 1px solid #e2e8f0;
-                                padding: 8px 12px;
-                                border-radius: 6px;
-                                font-weight: 800;
-                                color: #0f172a;
+                                font-size:11px;
+                                background:#f8fafc;
+                                border:1px solid #e2e8f0;
+                                padding:8px 12px;
+                                font-weight:800;
+                                color:#0f172a;
                             "
                         >
 
                             Respuesta Seleccionada:
 
-                            <span
+                            <strong
                                 style="
                                     color:
                                     ${
                                         vfSelection.value === 'VERDADERO'
-                                            ? '#10b981'
-                                            : '#ef4444'
+                                        ? '#10b981'
+                                        : '#ef4444'
                                     };
                                 "
                             >
-                                ${escapeHtml(
+                                ${escapeHTML(
                                     vfSelection.value
                                 )}
-                            </span>
+                            </strong>
 
                         </div>
 
@@ -2351,58 +2282,72 @@
 
 
             /* ----------------------------------------------------
-               INSERTAR EN DOM
-               ---------------------------------------------------- */
+               INSERTAR REALMENTE EN EL DOM
+            ---------------------------------------------------- */
 
             pdfWrapper.innerHTML =
                 pdfHTML;
 
 
-            /*
-             * ESTE ES EL CAMBIO CRÍTICO.
-             *
-             * Antes:
-             *
-             *     html2pdf().from(pdfWrapper)
-             *
-             * con pdfWrapper fuera del DOM.
-             *
-             * Ahora:
-             *
-             *     document.body.appendChild(pdfWrapper)
-             *
-             * para que html2canvas pueda renderizarlo.
-             */
-
-            document
-                .body
-                .appendChild(pdfWrapper);
+            document.body.appendChild(
+                pdfWrapper
+            );
 
 
             /* ----------------------------------------------------
-               ESPERAR AL RENDERIZADO
-               ---------------------------------------------------- */
+               ESPERAR RENDERIZADO
+            ---------------------------------------------------- */
 
-            await waitForRender();
+            await new Promise(resolve => {
+
+                requestAnimationFrame(() => {
+
+                    requestAnimationFrame(() => {
+
+                        resolve();
+
+                    });
+
+                });
+
+            });
+
+
+            /* ----------------------------------------------------
+               ESPERAR FUENTES
+            ---------------------------------------------------- */
+
+            if (
+                document.fonts &&
+                document.fonts.ready
+            ) {
+
+                try {
+
+                    await document.fonts.ready;
+
+                } catch (fontError) {
+
+                    console.warn(
+                        'No fue posible esperar las fuentes:',
+                        fontError
+                    );
+
+                }
+
+            }
 
 
             /* ----------------------------------------------------
                OPCIONES PDF
-               ---------------------------------------------------- */
+            ---------------------------------------------------- */
 
             const cleanGroupName =
                 groupData.number
-                    .replace(
-                        /[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]/g,
-                        '_'
-                    );
+                    .replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ_-]/g, '_');
 
 
-            const filename =
-                `Microbiologia_${cleanGroupName}_Caso${selectedCaseId}.pdf`;
-
-
-            const options = {
+            const opt = {
 
                 margin: [
                     10,
@@ -2411,7 +2356,8 @@
                     10
                 ],
 
-                filename: filename,
+                filename:
+                    `Microbiologia_${cleanGroupName}_Caso${selectedCaseId}.pdf`,
 
                 image: {
                     type: 'jpeg',
@@ -2428,29 +2374,11 @@
 
                     backgroundColor: '#ffffff',
 
-                    logging: false,
+                    logging: true,
 
                     imageTimeout: 15000,
 
-                    windowWidth: 794,
-
-                    windowHeight:
-                        Math.max(
-                            1123,
-                            pdfWrapper.scrollHeight + 100
-                        )
-
-                },
-
-                jsPDF: {
-
-                    unit: 'mm',
-
-                    format: 'a4',
-
-                    orientation: 'portrait',
-
-                    compress: true
+                    removeContainer: true
 
                 },
 
@@ -2462,9 +2390,21 @@
                     ],
 
                     avoid: [
+                        '.form-group',
                         'table',
-                        '.form-group'
+                        'tr',
+                        '.fill-box'
                     ]
+
+                },
+
+                jsPDF: {
+
+                    unit: 'mm',
+
+                    format: 'a4',
+
+                    orientation: 'portrait'
 
                 }
 
@@ -2472,41 +2412,27 @@
 
 
             /* ----------------------------------------------------
-               GENERAR PDF
-               ---------------------------------------------------- */
+               GENERAR
+            ---------------------------------------------------- */
 
             await html2pdf()
-                .set(options)
+                .set(opt)
                 .from(pdfWrapper)
                 .save();
 
 
             /* ----------------------------------------------------
                LIMPIAR
-               ---------------------------------------------------- */
+            ---------------------------------------------------- */
 
             if (
                 pdfWrapper &&
                 pdfWrapper.parentNode
             ) {
 
-                pdfWrapper
-                    .parentNode
-                    .removeChild(pdfWrapper);
-
-            }
-
-
-            /* ----------------------------------------------------
-               RESTAURAR BOTÓN
-               ---------------------------------------------------- */
-
-            if (clickedButton) {
-
-                clickedButton.disabled = false;
-
-                clickedButton.innerHTML =
-                    originalButtonHTML;
+                pdfWrapper.parentNode.removeChild(
+                    pdfWrapper
+                );
 
             }
 
@@ -2517,39 +2443,39 @@
 
         }
 
-
         catch (error) {
 
             console.error(
-                "Error durante la generación del PDF:",
+                "ERROR GENERANDO PDF:",
                 error
             );
 
 
+            /*
+             * Intentar limpiar el contenedor
+             * si ocurrió algún error.
+             */
+
+            const existing =
+                document.getElementById(
+                    'temporary-pdf-document'
+                );
+
+
             if (
-                pdfWrapper &&
-                pdfWrapper.parentNode
+                existing &&
+                existing.parentNode
             ) {
 
-                pdfWrapper
-                    .parentNode
-                    .removeChild(pdfWrapper);
-
-            }
-
-
-            if (clickedButton) {
-
-                clickedButton.disabled = false;
-
-                clickedButton.innerHTML =
-                    originalButtonHTML;
+                existing.parentNode.removeChild(
+                    existing
+                );
 
             }
 
 
             alert(
-                "No fue posible generar el PDF. Revisa la consola del navegador (F12) para consultar el error técnico."
+                "No fue posible generar el PDF. Abre la consola del navegador (F12) para revisar el error."
             );
 
         }
