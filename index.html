@@ -376,6 +376,29 @@
             cursor: not-allowed;
             transform: none;
         }
+
+        /* OVERLAY GENERACION PDF */
+        .pdf-generating-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #ffffff;
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            color: var(--brand-primary);
+            font-weight: 700;
+        }
+
+        .pdf-generating-overlay i {
+            font-size: 1.8rem;
+            color: var(--brand-accent);
+        }
     </style>
 </head>
 
@@ -1479,6 +1502,9 @@
 
     async function submitWork() {
 
+        let pdfWrapper = null;
+        let pdfOverlay = null;
+
         try {
 
             /* ----------------------------------------------------
@@ -1535,41 +1561,68 @@
 
 
             /* ----------------------------------------------------
+               OVERLAY VISUAL MIENTRAS SE GENERA EL PDF
+
+               (Antes el contenedor del PDF se posicionaba con
+               left: -100000px para "esconderlo" fuera de la
+               pantalla. Ese es justamente el origen del PDF en
+               blanco: html2canvas calcula el área a capturar en
+               base al scrollWidth/scrollHeight del documento, y
+               los desplazamientos NEGATIVOS no se incluyen en ese
+               cálculo, así que el contenido terminaba renderizado
+               fuera del lienzo capturado -> canvas vacío -> PDF
+               en blanco.
+
+               La solución es mantener el contenedor del PDF en
+               coordenadas normales/positivas (dentro del área que
+               sí es capturada), y taparlo visualmente con un
+               overlay opaco para que el usuario no vea el "flash"
+               de contenido mientras se genera el documento.)
+            ---------------------------------------------------- */
+
+            pdfOverlay =
+                document.createElement('div');
+
+            pdfOverlay.className =
+                'pdf-generating-overlay';
+
+            pdfOverlay.innerHTML = `
+                <i class="fa-solid fa-file-pdf"></i>
+                <span>Generando tu PDF, por favor espera...</span>
+            `;
+
+            document.body.appendChild(pdfOverlay);
+
+
+            /* ----------------------------------------------------
                CREAR CONTENEDOR
             ---------------------------------------------------- */
 
-            const pdfWrapper =
+            pdfWrapper =
                 document.createElement('div');
-
-
-            /*
-             * IMPORTANTE:
-             *
-             * Antes el elemento solamente existía en memoria:
-             *
-             * document.createElement('div')
-             *
-             * y luego:
-             *
-             * html2pdf().from(pdfWrapper)
-             *
-             *
-             * En determinados navegadores / versiones de
-             * html2canvas esto puede producir un canvas vacío.
-             *
-             * Ahora el elemento se incorpora temporalmente al DOM.
-             */
 
 
             pdfWrapper.id =
                 'temporary-pdf-document';
 
 
-            pdfWrapper.style.position =
-                'absolute';
+            /*
+             * IMPORTANTE:
+             *
+             * Se posiciona en coordenadas normales (0,0), dentro
+             * del flujo que html2canvas SÍ captura, y se cubre
+             * visualmente con el overlay de arriba (que tiene un
+             * z-index superior). Así evitamos el bug de canvas
+             * vacío que producían los offsets negativos, sin que
+             * el usuario vea el documento "de fondo".
+             */
 
-            pdfWrapper.style.left =
-                '-100000px';
+
+            pdfWrapper.style.position =
+                'fixed';
+
+        pdfWrapper.style.left =
+                '0';
 
             pdfWrapper.style.top =
                 '0';
@@ -1599,7 +1652,7 @@
                 '1.45';
 
             pdfWrapper.style.zIndex =
-                '-1';
+                '999998';
 
 
             /* ----------------------------------------------------
@@ -2378,7 +2431,11 @@
 
                     imageTimeout: 15000,
 
-                    removeContainer: true
+                    removeContainer: true,
+
+                    windowWidth: pdfWrapper.scrollWidth,
+
+                    windowHeight: pdfWrapper.scrollHeight
 
                 },
 
@@ -2436,6 +2493,17 @@
 
             }
 
+            if (
+                pdfOverlay &&
+                pdfOverlay.parentNode
+            ) {
+
+                pdfOverlay.parentNode.removeChild(
+                    pdfOverlay
+                );
+
+            }
+
 
             alert(
                 "¡Documento PDF generado y descargado exitosamente!"
@@ -2452,23 +2520,28 @@
 
 
             /*
-             * Intentar limpiar el contenedor
+             * Intentar limpiar el contenedor y el overlay
              * si ocurrió algún error.
              */
 
-            const existing =
-                document.getElementById(
-                    'temporary-pdf-document'
-                );
-
-
             if (
-                existing &&
-                existing.parentNode
+                pdfWrapper &&
+                pdfWrapper.parentNode
             ) {
 
-                existing.parentNode.removeChild(
-                    existing
+                pdfWrapper.parentNode.removeChild(
+                    pdfWrapper
+                );
+
+            }
+
+            if (
+                pdfOverlay &&
+                pdfOverlay.parentNode
+            ) {
+
+                pdfOverlay.parentNode.removeChild(
+                    pdfOverlay
                 );
 
             }
