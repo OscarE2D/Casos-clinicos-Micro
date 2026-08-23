@@ -1,0 +1,1851 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microbiología — Análisis Guiado de Casos Clínicos</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome para Iconografía -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Librería HTML2PDF para generación de documentos -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <style>
+        :root {
+            --brand-primary: #0f172a;
+            --brand-accent: #0284c7;
+            --brand-emerald: #10b981;
+            --brand-warning: #f59e0b;
+            --brand-danger: #ef4444;
+            --bg-main: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+            --shadow-glow: 0 0 20px rgba(2, 132, 199, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 24px 16px;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(2, 132, 199, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+        }
+
+        .app-container {
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        /* HEADER PRINCIPAL */
+        .app-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #ffffff;
+            padding: 32px 28px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(2, 132, 199, 0.25) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .badge-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(2, 132, 199, 0.2);
+            border: 1px solid rgba(2, 132, 199, 0.4);
+            color: #38bdf8;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .app-header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+
+        .app-header p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        /* VISTAS (SPA) */
+        .view-panel {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out forwards;
+        }
+
+        .view-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* CARDS */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 24px;
+        }
+
+        .section-header-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--brand-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--brand-primary);
+            margin-bottom: 8px;
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            color: var(--text-main);
+            transition: all 0.2s;
+            background: #f8fafc;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--brand-accent);
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.1);
+        }
+
+        /* GRID DE SELECCIÓN DE CASO */
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .case-card {
+            background: #ffffff;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 130px;
+        }
+
+        .case-card:hover {
+            border-color: var(--brand-accent);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .case-card.selected {
+            border-color: var(--brand-emerald);
+            background: #f0fdf4;
+        }
+
+        .case-card .case-title {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--brand-primary);
+        }
+
+        .case-card .case-sub {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .case-card .status-tag {
+            align-self: flex-start;
+            margin-top: 12px;
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 700;
+            background: #f1f5f9;
+            color: var(--text-muted);
+        }
+
+        .case-card.selected .status-tag {
+            background: #dcfce7;
+            color: var(--brand-emerald);
+        }
+
+        /* BANNER GRUPO */
+        .group-banner {
+            background: linear-gradient(90deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: var(--radius-md);
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+
+        /* SCENARIO BOX */
+        .scenario-box {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-left: 5px solid var(--brand-accent);
+            padding: 20px;
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #0c4a6e;
+            margin-bottom: 20px;
+        }
+
+        /* TABLAS INTERACTIVAS */
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            margin-bottom: 20px;
+        }
+
+        .custom-table th, .custom-table td {
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .custom-table th {
+            background: #f8fafc;
+            color: var(--brand-primary);
+            font-weight: 700;
+        }
+
+        /* CADENA PREANALÍTICA (SECUENCIA) */
+        .sequence-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .sequence-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f8fafc;
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+        }
+
+        .sequence-item select {
+            width: 80px;
+            padding: 6px;
+            font-weight: 700;
+        }
+
+        /* CONSOLIDACIÓN (FILL IN BLANKS) */
+        .fill-box {
+            background: #fffbeef5;
+            border: 1px solid #fde68a;
+            border-left: 4px solid var(--brand-warning);
+            padding: 18px;
+            border-radius: var(--radius-md);
+            margin-top: 20px;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: #78350f;
+        }
+
+        .fill-input {
+            border: none;
+            border-bottom: 2px solid #b45309;
+            background: transparent;
+            padding: 2px 8px;
+            font-weight: 700;
+            color: #78350f;
+            outline: none;
+            width: 180px;
+            text-align: center;
+        }
+
+        /* BOTONES */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--brand-accent) 0%, #0369a1 100%);
+            color: #ffffff;
+            border: none;
+            padding: 14px 28px;
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(2, 132, 199, 0.4);
+        }
+
+        .btn-primary:disabled {
+            background: #cbd5e1;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <!-- HEADER GENERAL -->
+    <header class="app-header">
+        <div class="badge-tag"><i class="fa-solid fa-microscope"></i> Microbiología | Auxiliar de Enfermería</div>
+        <h1>Análisis Guiado de Casos Clínicos</h1>
+        <p>Toma, Manejo y Bioseguridad de Muestras Microbiológicas (60 min)</p>
+    </header>
+
+    <!-- VISTA 1: REGISTRO DE GRUPO Y SELECCIÓN DE CASO -->
+    <div id="view-registration" class="view-panel active">
+        <div class="card">
+            <div class="section-header-title">
+                <i class="fa-solid fa-users" style="color: var(--brand-accent);"></i> 1. Registro del Equipo de Trabajo
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="inputGroupNum">Número o Nombre del Grupo:</label>
+                <input type="text" id="inputGroupNum" class="form-input" placeholder="Ej. Grupo N° 3">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Integrantes del Equipo (Nombre y Apellido):</label>
+                <input type="text" id="member1" class="form-input" placeholder="Integrante 1" style="margin-bottom: 8px;">
+                <input type="text" id="member2" class="form-input" placeholder="Integrante 2" style="margin-bottom: 8px;">
+                <input type="text" id="member3" class="form-input" placeholder="Integrante 3" style="margin-bottom: 8px;">
+                <input type="text" id="member4" class="form-input" placeholder="Integrante 4">
+            </div>
+
+            <div class="section-header-title" style="margin-top: 28px;">
+                <i class="fa-solid fa-folder-open" style="color: var(--brand-accent);"></i> 2. Selecciona el Caso Asignado por el Docente
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
+                Cada equipo analizará un caso clínico principal y posteriormente resolverá el Bloque Integrador de clase.
+            </p>
+
+            <div class="cases-grid">
+                <div class="case-card" id="case-card-1" onclick="selectCase(1)">
+                    <div>
+                        <div class="case-title">Caso 1</div>
+                        <div class="case-sub">Infección Respiratoria</div>
+                    </div>
+                    <div class="status-tag">Seleccionar</div>
+                </div>
+
+                <div class="case-card" id="case-card-2" onclick="selectCase(2)">
+                    <div>
+                        <div class="case-title">Caso 2</div>
+                        <div class="case-sub">Infección Urinaria</div>
+                    </div>
+                    <div class="status-tag">Seleccionar</div>
+                </div>
+
+                <div class="case-card" id="case-card-3" onclick="selectCase(3)">
+                    <div>
+                        <div class="case-title">Caso 3</div>
+                        <div class="case-sub">Infección Gastrointestinal</div>
+                    </div>
+                    <div class="status-tag">Seleccionar</div>
+                </div>
+
+                <div class="case-card" id="case-card-4" onclick="selectCase(4)">
+                    <div>
+                        <div class="case-title">Caso 4</div>
+                        <div class="case-sub">Infección Cutánea</div>
+                    </div>
+                    <div class="status-tag">Seleccionar</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 28px;">
+                <button id="btnStartActivity" class="btn-primary" disabled onclick="startActivity()">
+                    Iniciar Análisis del Caso <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VISTA 2: DESARROLLO DE LA ACTIVIDAD -->
+    <div id="view-activity" class="view-panel">
+        
+        <!-- Banner Grupo -->
+        <div class="group-banner">
+            <div>
+                <span style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;" id="displayGroupTitle">Grupo</span>
+                <h3 id="displayMembers" style="color: var(--brand-primary); font-size: 0.95rem; font-weight: 600;">-</h3>
+            </div>
+            <div>
+                <span class="badge-tag" id="displayCaseTag">Caso -</span>
+            </div>
+        </div>
+
+        <!-- PARTE I: CASO ASIGNADO -->
+        <div class="card">
+            <div class="section-header-title">
+                <i class="fa-solid fa-notes-medical" style="color: var(--brand-accent);"></i> PARTE I: Análisis del Caso Asignado
+            </div>
+
+            <!-- Contenedor Dinámico del Caso -->
+            <div id="caseDynamicContent">
+                <!-- Inyectado con JS -->
+            </div>
+        </div>
+
+        <!-- PARTE II: BLOQUE INTEGRADOR GENERAL -->
+        <div class="card">
+            <div class="section-header-title">
+                <i class="fa-solid fa-layer-group" style="color: var(--brand-emerald);"></i> PARTE II: Integración y Cierre General de Clase
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+                <em>Esta sección es de carácter obligatorio para todos los grupos de la clase.</em>
+            </p>
+
+            <!-- 1. Cadena Preanalítica -->
+            <div class="form-group">
+                <label class="form-label">1. Cadena de Valor Preanalítica (Ordenamiento de Pasos del 1 al 7)</label>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
+                    Asigne el número de orden (1 a 7) que corresponde a cada paso para reconstruir la secuencia correcta:
+                </p>
+
+                <div class="sequence-list" id="sequenceContainer">
+                    <!-- Se llena con JS -->
+                </div>
+            </div>
+
+            <!-- 2. Gran Conclusión -->
+            <div class="form-group" style="margin-top: 24px;">
+                <label class="form-label" for="inputGrandConclusion">2. Gran Conclusión de Aula:</label>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">En sus palabras: ¿Qué hace que una toma de muestra sea un procedimiento técnico bien hecho y no un simple trámite?</p>
+                <textarea id="inputGrandConclusion" class="form-textarea" placeholder="Escriba aquí la conclusión consensuada del grupo..."></textarea>
+            </div>
+
+            <!-- 3. Falso o Verdadero -->
+            <div class="form-group" style="margin-top: 24px;">
+                <label class="form-label">3. Verificación de Premisa Fundamental (Falso o Verdadero):</label>
+                <div style="background: #f8fafc; border: 1px solid var(--border); padding: 16px; border-radius: var(--radius-md); margin-top: 8px;">
+                    <p style="font-size: 0.9rem; color: #334155; margin-bottom: 12px; line-height: 1.5;">
+                        <em>"Una muestra microbiológica ÚTIL y SEGURA requiere que: Sea seleccionada según el sitio anatómico real de la infección, se obtenga mediante técnica aséptica adecuada a la condición del paciente, conserve su identidad e integridad sin demoras en el transporte, y se manipule bajo strictly medidas de bioseguridad para proteger al personal y al espécimen."</em>
+                    </p>
+                    <div style="display: flex; gap: 20px;">
+                        <label style="font-weight: 700; cursor: pointer; color: var(--brand-primary);">
+                            <input type="radio" name="vf_option" value="FALSO"> FALSO
+                        </label>
+                        <label style="font-weight: 700; cursor: pointer; color: var(--brand-emerald);">
+                            <input type="radio" name="vf_option" value="VERDADERO"> VERDADERO
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 28px;">
+                <button class="btn-primary" onclick="submitWork()">
+                    Finalizar y Generar PDF de la Actividad <i class="fa-solid fa-file-pdf"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    // ============================================================
+    // DATOS DE LOS 4 CASOS CLÍNICOS
+    // ============================================================
+
+    const CASES_DATA = {
+        1: {
+            title: "CASO 1 — INFECCIÓN RESPIRATORIA",
+            focus: "Selección y Representatividad de la Muestra",
+            scenario: "Un paciente adulto consulta por fiebre, tos productiva, dolor torácico y dificultad respiratoria. Por sus manifestaciones clínicas se sospecha una infección de las vías respiratorias inferiores y se solicita un estudio microbiológico. Durante la atención, se recibe un recipiente con material para el estudio, el cual está constituido principalmente por <strong>saliva</strong>.",
+            questions: [
+                {
+                    id: "q1_1",
+                    text: "1. Identificación de la necesidad clínica: ¿Qué sitio anatómico específico necesitamos investigar en este paciente y cuál sería el espécimen ideal para dicho sitio?"
+                },
+                {
+                    id: "q1_2",
+                    text: "2. Análisis de la muestra recibida: El material recibido proviene de la boca (saliva). ¿Por qué no podemos asumirlo como una muestra adecuada para estudiar las vías respiratorias inferiores?"
+                },
+                {
+                    id: "q1_3",
+                    text: "3. Concepto clave (Representatividad): ¿Qué condición debe cumplir una muestra para ser considerada representativa del proceso infeccioso?"
+                },
+                {
+                    id: "q1_4",
+                    text: "4. Consecuencia microbiológica: Si procesamos una muestra rica en saliva y microbiota oral en lugar de secreción profunda, ¿qué problema de interpretación se genera en el laboratorio?"
+                }
+            ],
+            decisionPrompt: "¿Aceptamos o rechazamos la muestra salival para el estudio de vías respiratorias inferiores? Justifiquen su respuesta técnica:",
+            hasTable: false,
+            consolidationText: 'Para seleccionar una muestra microbiológica adecuada, no basta con saber la enfermedad; debemos verificar que el espécimen sea <input type="text" class="fill-input" id="fill_1" placeholder="palabra clave"> del sitio anatómico que queremos investigar.'
+        },
+
+        2: {
+            title: "CASO 2 — INFECCIÓN URINARIA",
+            focus: "Obtención de la Muestra y Prevención de Contaminación",
+            scenario: "<strong>Paciente A:</strong> Mujer de 35 años con disuria, polaquiuria y dolor suprapúbico. Se solicita urocultivo (micción espontánea).<br><strong>Paciente B:</strong> Paciente con los mismos síntomas, pero portador de un catéter urinario permanente (sonda vesical).",
+            questions: [
+                {
+                    id: "q2_1",
+                    text: "1. Verificación previa: Antes de tomar la muestra en cualquiera de los dos pacientes, ¿qué verificaciones iniciales (paciente, solicitud, insumos) debemos realizar obligatoriamente?"
+                },
+                {
+                    id: "q2_2",
+                    text: "2. Control de contaminación en Paciente A: En la micción espontánea, ¿qué instrucciones de preparación e higiene de la paciente son críticas para evitar la contaminación por flora genital?"
+                },
+                {
+                    id: "q2_3",
+                    text: "3. Técnica de obtención en Paciente B: En el paciente con sonda vesical, ¿de dónde y cómo debemos tomar la muestra para urocultivo? ¿Por qué está contraindicado tomarla de la bolsa recolectora?"
+                }
+            ],
+            hasTable: true,
+            tableHeaders: [
+                "Condición del Paciente",
+                "Sitio / Puerto de Obtención",
+                "Riesgo Principal de Contaminación"
+            ],
+            tableRows: [
+                {
+                    col1: "Paciente A (Micción espontánea)",
+                    id2: "c2_pA_sitio",
+                    id3: "c2_pA_riesgo"
+                },
+                {
+                    col1: "Paciente B (Catéter permanente)",
+                    id2: "c2_pB_sitio",
+                    id3: "c2_pB_riesgo"
+                }
+            ],
+            consolidationText: 'Una muestra correcta no depende solo del tipo de espécimen (orina), sino de adecuar la (o el) <input type="text" class="fill-input" id="fill_2a" placeholder="técnica / método"> de obtención a la condición particular del paciente para evitar la <input type="text" class="fill-input" id="fill_2b" placeholder="efecto no deseado">.'
+        },
+
+        3: {
+            title: "CASO 3 — INFECCIÓN GASTROINTESTINAL",
+            focus: "Identificación, Trazabilidad, Conservación y Transporte",
+            scenario: "Un paciente consulta por diarrea aguda y fiebre. Se solicita coprocultivo. La muestra de materia fecal es recolectada en recipiente adecuado. Sin embargo, ocurren tres anomalías:<br>1. La etiqueta del recipiente no coincide exactamente con la solicitud médica.<br>2. El recipiente queda en mesa de trabajo a temperatura ambiente durante más de 6 horas.<br>3. No se utilizó medio de transporte para conservar los patógenos entéricos.",
+            questions: [
+                {
+                    id: "q3_1",
+                    text: "1. Trazabilidad: ¿Por qué una inconsistencia entre los datos del recipiente y la solicitud médica invalida el procesamiento de la muestra?"
+                },
+                {
+                    id: "q3_2",
+                    text: "2. Integridad y Conservación: ¿Qué le sucede a los microorganismos patógenos y a la microbiota acompañante cuando la muestra fecal permanece horas a temperatura ambiente sin conservación?"
+                },
+                {
+                    id: "q3_3",
+                    text: "3. El rol del Transporte: ¿Por qué el transporte se considera parte crítica de la fase preanalítica y no un simple traslado físico?"
+                }
+            ],
+            decisionPrompt: "Decisión del Grupo: Identifiquen en qué momento específico del recorrido de la muestra se perdió la calidad preanalítica y qué medida correctiva correspondía aplicar:",
+            hasTable: false,
+            consolidationText: 'Una muestra correctamente obtenida pierde su utilidad diagnóstica si se interrumpe la <input type="text" class="fill-input" id="fill_3a" placeholder="condición 1"> del paciente o si fallan las condiciones de <input type="text" class="fill-input" id="fill_3b" placeholder="condición 2"> y <input type="text" class="fill-input" id="fill_3c" placeholder="condición 3"> durante el traslado.'
+        },
+
+        4: {
+            title: "CASO 4 — INFECCIÓN CUTÁNEA",
+            focus: "Calidad del Espécimen y Bioseguridad en la Toma",
+            scenario: "Un paciente hospitalizado presenta una herida quirúrgica en la pierna con eritema, secreción purulenta profunda y dolor. La auxiliar de enfermería realiza la toma de muestra frotando un hisopo únicamente en la piel superficial alrededor de la herida. Utiliza guantes. Al cerrar el recipiente de forma apresurada, este gotea y derrama secreción sobre la gradilla de transporte durante el traslado.",
+            questions: [
+                {
+                    id: "q4_1",
+                    text: "1. Evaluación de la Muestra (Representatividad): ¿Por qué el hisopado superficial de piel no representa el proceso infeccioso profundo de la herida? ¿Qué material se debió aspirar/tomar?"
+                },
+                {
+                    id: "q4_2",
+                    text: "2. Evaluación de Bioseguridad (Riesgo y Protección): ¿El uso de guantes reemplaza la higiene de manos antes y después del procedimiento? Justifiquen. ¿Qué otro EPP era necesario?"
+                },
+                {
+                    id: "q4_3",
+                    text: "3. Manejo del Incidente (Contención): Ante el derrame y fuga de la muestra en el contenedor de traslado, ¿cuáles son los dos aspectos que se vieron comprometidos simultáneamente?"
+                }
+            ],
+            hasTable: true,
+            tableHeaders: [
+                "Dimensión",
+                "Problema Detectado en el Caso",
+                "Acción Correctiva Requerida"
+            ],
+            tableRows: [
+                {
+                    col1: "Calidad de la Muestra",
+                    id2: "c4_cal_prob",
+                    id3: "c4_cal_acc"
+                },
+                {
+                    col1: "Bioseguridad e Integridad",
+                    id2: "c4_bio_prob",
+                    id3: "c4_bio_acc"
+                }
+            ],
+            consolidationText: 'El procedimiento de toma de muestra debe garantizar de forma simultánea la <input type="text" class="fill-input" id="fill_4a" placeholder="condición espécimen"> del espécimen y la <input type="text" class="fill-input" id="fill_4b" placeholder="condición personal"> del personal de salud mediante el control de riesgos biológicos.'
+        }
+    };
+
+
+    // ============================================================
+    // ESLABONES DE LA CADENA PREANALÍTICA
+    // ============================================================
+
+    const SEQUENCE_ITEMS = [
+        { code: "A", name: "A. Obtención Aséptica" },
+        { code: "B", name: "B. Trazabilidad e Identificación" },
+        { code: "C", name: "C. Sitio Anatómico" },
+        { code: "D", name: "D. Conservación y Transporte" },
+        { code: "E", name: "E. Verificar Representatividad" },
+        { code: "F", name: "F. Bioseguridad" },
+        { code: "G", name: "G. Seleccionar Espécimen" }
+    ];
+
+
+    // ============================================================
+    // ESTADO LOCAL
+    // ============================================================
+
+    let selectedCaseId = null;
+
+    let groupData = {
+        number: "",
+        members: []
+    };
+
+
+    // ============================================================
+    // SELECCIÓN DEL CASO
+    // ============================================================
+
+    function selectCase(caseId) {
+
+        selectedCaseId = caseId;
+
+        document
+            .querySelectorAll('.case-card')
+            .forEach(card => card.classList.remove('selected'));
+
+        document
+            .getElementById(`case-card-${caseId}`)
+            .classList.add('selected');
+
+        checkRegistrationForm();
+    }
+
+
+    // ============================================================
+    // VALIDACIÓN DEL REGISTRO
+    // ============================================================
+
+    function checkRegistrationForm() {
+
+        const groupNum =
+            document
+                .getElementById('inputGroupNum')
+                .value
+                .trim();
+
+        const btn =
+            document.getElementById('btnStartActivity');
+
+        btn.disabled = !(groupNum && selectedCaseId);
+    }
+
+
+    document
+        .getElementById('inputGroupNum')
+        .addEventListener('input', checkRegistrationForm);
+
+
+    // ============================================================
+    // INICIO DE LA ACTIVIDAD
+    // ============================================================
+
+    function startActivity() {
+
+        groupData.number =
+            document
+                .getElementById('inputGroupNum')
+                .value
+                .trim();
+
+        groupData.members = [
+            document.getElementById('member1').value.trim(),
+            document.getElementById('member2').value.trim(),
+            document.getElementById('member3').value.trim(),
+            document.getElementById('member4').value.trim()
+        ].filter(member => member !== "");
+
+
+        // Banner
+
+        document.getElementById('displayGroupTitle').innerText =
+            groupData.number;
+
+        document.getElementById('displayMembers').innerText =
+            "Integrantes: " +
+            (
+                groupData.members.join(', ') ||
+                "No especificados"
+            );
+
+        document.getElementById('displayCaseTag').innerText =
+            `Caso Clínico Asignado: N° ${selectedCaseId}`;
+
+
+        // Renderizar caso
+
+        renderCaseContent(selectedCaseId);
+
+
+        // Renderizar secuencia
+
+        renderSequenceList();
+
+
+        // Cambiar vista
+
+        document
+            .getElementById('view-registration')
+            .classList.remove('active');
+
+        document
+            .getElementById('view-activity')
+            .classList.add('active');
+
+
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
+
+
+    // ============================================================
+    // RENDERIZAR CASO
+    // ============================================================
+
+    function renderCaseContent(caseId) {
+
+        const data = CASES_DATA[caseId];
+
+        const container =
+            document.getElementById('caseDynamicContent');
+
+        let html = '';
+
+
+        html += `
+            <h3 style="color: var(--brand-primary); margin-bottom: 4px;">
+                ${data.title}
+            </h3>
+
+            <div style="
+                font-size: 0.85rem;
+                font-weight: 700;
+                color: var(--brand-accent);
+                text-transform: uppercase;
+                margin-bottom: 16px;
+            ">
+                Enfoque: ${data.focus}
+            </div>
+        `;
+
+
+        html += `
+            <div class="scenario-box">
+                <strong>Situación Clínica:</strong><br>
+                ${data.scenario}
+            </div>
+        `;
+
+
+        data.questions.forEach(question => {
+
+            html += `
+                <div class="form-group">
+
+                    <label class="form-label">
+                        ${question.text}
+                    </label>
+
+                    <textarea
+                        id="${question.id}"
+                        class="form-textarea"
+                        placeholder="Escriba la respuesta razonada del equipo..."
+                    ></textarea>
+
+                </div>
+            `;
+        });
+
+
+        // Tabla
+
+        if (data.hasTable) {
+
+            html += `
+                <label
+                    class="form-label"
+                    style="margin-top:20px;"
+                >
+                    Cuadro Comparativo de Análisis:
+                </label>
+
+                <table class="custom-table">
+
+                    <thead>
+                        <tr>
+            `;
+
+            data.tableHeaders.forEach(header => {
+                html += `<th>${header}</th>`;
+            });
+
+            html += `
+                        </tr>
+                    </thead>
+
+                    <tbody>
+            `;
+
+
+            data.tableRows.forEach(row => {
+
+                html += `
+                    <tr>
+
+                        <td>
+                            <strong>${row.col1}</strong>
+                        </td>
+
+                        <td>
+                            <input
+                                type="text"
+                                class="form-input"
+                                id="${row.id2}"
+                                placeholder="Completar..."
+                            >
+                        </td>
+
+                        <td>
+                            <input
+                                type="text"
+                                class="form-input"
+                                id="${row.id3}"
+                                placeholder="Completar..."
+                            >
+                        </td>
+
+                    </tr>
+                `;
+            });
+
+
+            html += `
+                    </tbody>
+                </table>
+            `;
+        }
+
+
+        // Decisión
+
+        if (data.decisionPrompt) {
+
+            html += `
+                <div
+                    class="form-group"
+                    style="margin-top:20px;"
+                >
+
+                    <label
+                        class="form-label"
+                        style="color: var(--brand-danger);"
+                    >
+                        ${data.decisionPrompt}
+                    </label>
+
+                    <textarea
+                        id="decision_text"
+                        class="form-textarea"
+                        placeholder="Justificación técnica de la decisión..."
+                    ></textarea>
+
+                </div>
+            `;
+        }
+
+
+        // Consolidación
+
+        html += `
+            <div class="fill-box">
+
+                <h4 style="margin-bottom: 8px;">
+                    <i class="fa-solid fa-key"></i>
+                    Lo aprendido en el Caso (Cierre de Consolidación)
+                </h4>
+
+                <p>
+                    ${data.consolidationText}
+                </p>
+
+            </div>
+        `;
+
+
+        container.innerHTML = html;
+    }
+
+
+    // ============================================================
+    // RENDERIZAR SECUENCIA
+    // ============================================================
+
+    function renderSequenceList() {
+
+        const container =
+            document.getElementById('sequenceContainer');
+
+        container.innerHTML = '';
+
+
+        SEQUENCE_ITEMS.forEach(item => {
+
+            const div =
+                document.createElement('div');
+
+            div.className =
+                'sequence-item';
+
+
+            div.innerHTML = `
+
+                <select
+                    class="form-select seq-select"
+                    data-code="${item.code}"
+                >
+
+                    <option value="">
+                        Posición
+                    </option>
+
+                    <option value="1">1°</option>
+                    <option value="2">2°</option>
+                    <option value="3">3°</option>
+                    <option value="4">4°</option>
+                    <option value="5">5°</option>
+                    <option value="6">6°</option>
+                    <option value="7">7°</option>
+
+                </select>
+
+                <span style="
+                    font-size: 0.9rem;
+                    font-weight: 600;
+                    color: var(--brand-primary);
+                ">
+                    ${item.name}
+                </span>
+            `;
+
+
+            container.appendChild(div);
+        });
+    }
+
+
+    // ============================================================
+    // ESCAPE HTML
+    // Evita que las respuestas escritas por el usuario
+    // sean interpretadas como HTML dentro del PDF.
+    // ============================================================
+
+    function escapeHTML(value) {
+
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+
+    // ============================================================
+    // GENERACIÓN DEL PDF
+    // ============================================================
+
+    async function submitWork() {
+
+        const grandConclusion =
+            document
+                .getElementById('inputGrandConclusion')
+                .value
+                .trim();
+
+
+        const vfSelection =
+            document.querySelector(
+                'input[name="vf_option"]:checked'
+            );
+
+
+        if (!grandConclusion || !vfSelection) {
+
+            alert(
+                "Por favor completa la Gran Conclusión de Aula y selecciona tu respuesta de Falso o Verdadero en la PARTE II antes de generar el PDF."
+            );
+
+            return;
+        }
+
+
+        // --------------------------------------------------------
+        // VERIFICAR QUE HTML2PDF ESTÉ DISPONIBLE
+        // --------------------------------------------------------
+
+        if (typeof html2pdf !== 'function') {
+
+            alert(
+                "No se pudo cargar la librería de generación PDF (html2pdf.js). Verifica tu conexión a Internet y vuelve a intentarlo."
+            );
+
+            console.error(
+                "html2pdf.js no está disponible."
+            );
+
+            return;
+        }
+
+
+        const caseData =
+            CASES_DATA[selectedCaseId];
+
+
+        // --------------------------------------------------------
+        // CREAR CONTENEDOR PDF
+        // --------------------------------------------------------
+
+        const pdfWrapper =
+            document.createElement('div');
+
+
+        /*
+         * IMPORTANTE:
+         *
+         * El elemento se inserta temporalmente en el DOM.
+         * Esto evita problemas de html2canvas al intentar
+         * rasterizar un elemento completamente desconectado
+         * del documento.
+         */
+
+        pdfWrapper.style.position = 'absolute';
+        pdfWrapper.style.left = '-100000px';
+        pdfWrapper.style.top = '0';
+
+        pdfWrapper.style.width = '794px';
+        pdfWrapper.style.minHeight = '1123px';
+
+        pdfWrapper.style.padding = '30px';
+
+        pdfWrapper.style.fontFamily =
+            "'Plus Jakarta Sans', sans-serif";
+
+        pdfWrapper.style.color =
+            '#0f172a';
+
+        pdfWrapper.style.backgroundColor =
+            '#ffffff';
+
+        pdfWrapper.style.boxSizing =
+            'border-box';
+
+
+        // --------------------------------------------------------
+        // CONSTRUCCIÓN DEL DOCUMENTO
+        // --------------------------------------------------------
+
+        let pdfHTML = `
+
+            <div style="
+                border-bottom: 3px solid #0284c7;
+                padding-bottom: 12px;
+                margin-bottom: 20px;
+            ">
+
+                <div style="
+                    font-size: 10px;
+                    font-weight: 800;
+                    color: #0284c7;
+                    text-transform: uppercase;
+                ">
+                    Microbiología | Auxiliar de Enfermería
+                </div>
+
+                <h1 style="
+                    font-size: 20px;
+                    font-weight: 800;
+                    color: #0f172a;
+                    margin: 4px 0;
+                ">
+                    Análisis Guiado de Casos Clínicos
+                </h1>
+
+                <div style="
+                    font-size: 11px;
+                    color: #64748b;
+                ">
+                    Fecha: 23 de Agosto de 2026 |
+                    Duración: 60 minutos
+                </div>
+
+            </div>
+
+
+            <div style="
+                background-color: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                padding: 14px;
+                margin-bottom: 20px;
+            ">
+
+                <h3 style="
+                    font-size: 14px;
+                    color: #0f172a;
+                    margin-bottom: 6px;
+                ">
+                    IDENTIFICACIÓN DEL EQUIPO
+                </h3>
+
+                <p style="
+                    font-size: 12px;
+                    margin-bottom: 4px;
+                ">
+                    <strong>Grupo:</strong>
+                    ${escapeHTML(groupData.number)}
+                </p>
+
+                <p style="
+                    font-size: 12px;
+                ">
+                    <strong>Integrantes:</strong>
+                    ${
+                        groupData.members.length
+                            ? groupData.members.map(escapeHTML).join(', ')
+                            : 'Sin especificar'
+                    }
+                </p>
+
+            </div>
+
+
+            <div style="margin-bottom: 24px;">
+
+                <h2 style="
+                    font-size: 15px;
+                    font-weight: 800;
+                    color: #0284c7;
+                    border-bottom: 1px solid #e2e8f0;
+                    padding-bottom: 4px;
+                    margin-bottom: 10px;
+                ">
+                    PARTE I: ${caseData.title}
+                </h2>
+
+                <p style="
+                    font-size: 11px;
+                    color: #64748b;
+                    margin-bottom: 12px;
+                ">
+                    <strong>Enfoque:</strong>
+                    ${caseData.focus}
+                </p>
+
+                <div style="
+                    background-color: #f0f9ff;
+                    border-left: 4px solid #0284c7;
+                    padding: 10px 14px;
+                    font-size: 11px;
+                    color: #0c4a6e;
+                    margin-bottom: 16px;
+                ">
+                    <strong>Situación Clínica:</strong><br>
+                    ${caseData.scenario.replace(/<[^>]*>?/gm, '')}
+                </div>
+        `;
+
+
+        // --------------------------------------------------------
+        // PREGUNTAS
+        // --------------------------------------------------------
+
+        caseData.questions.forEach(question => {
+
+            const element =
+                document.getElementById(question.id);
+
+            const answer =
+                element
+                    ? element.value
+                    : '';
+
+
+            pdfHTML += `
+
+                <div style="
+                    margin-bottom: 14px;
+                    page-break-inside: avoid;
+                ">
+
+                    <p style="
+                        font-size: 11px;
+                        font-weight: 700;
+                        color: #0f172a;
+                        margin-bottom: 4px;
+                    ">
+                        ${question.text}
+                    </p>
+
+                    <div style="
+                        font-size: 11px;
+                        background: #fafafa;
+                        border: 1px solid #e2e8f0;
+                        padding: 8px 12px;
+                        border-radius: 6px;
+                        min-height: 35px;
+                        color: #334155;
+                    ">
+                        ${
+                            answer
+                                ? escapeHTML(answer).replace(/\n/g, '<br>')
+                                : '<em style="color:#94a3b8">Sin respuesta</em>'
+                        }
+                    </div>
+
+                </div>
+            `;
+        });
+
+
+        // --------------------------------------------------------
+        // TABLA
+        // --------------------------------------------------------
+
+        if (caseData.hasTable) {
+
+            pdfHTML += `
+
+                <p style="
+                    font-size: 11px;
+                    font-weight: 700;
+                    margin-top: 14px;
+                    margin-bottom: 6px;
+                ">
+                    Cuadro Comparativo de Análisis:
+                </p>
+
+                <table style="
+                    width: 100%;
+                    border-collapse: collapse;
+                    font-size: 10px;
+                    margin-bottom: 16px;
+                ">
+
+                    <thead>
+
+                        <tr style="
+                            background-color: #f1f5f9;
+                        ">
+            `;
+
+
+            caseData.tableHeaders.forEach(header => {
+
+                pdfHTML += `
+                    <th style="
+                        border: 1px solid #cbd5e1;
+                        padding: 6px;
+                        text-align: left;
+                    ">
+                        ${header}
+                    </th>
+                `;
+            });
+
+
+            pdfHTML += `
+                        </tr>
+                    </thead>
+
+                    <tbody>
+            `;
+
+
+            caseData.tableRows.forEach(row => {
+
+                const element2 =
+                    document.getElementById(row.id2);
+
+                const element3 =
+                    document.getElementById(row.id3);
+
+
+                const val2 =
+                    element2
+                        ? element2.value.trim()
+                        : '';
+
+
+                const val3 =
+                    element3
+                        ? element3.value.trim()
+                        : '';
+
+
+                pdfHTML += `
+
+                    <tr>
+
+                        <td style="
+                            border: 1px solid #cbd5e1;
+                            padding: 6px;
+                        ">
+                            <strong>
+                                ${row.col1}
+                            </strong>
+                        </td>
+
+                        <td style="
+                            border: 1px solid #cbd5e1;
+                            padding: 6px;
+                        ">
+                            ${val2 ? escapeHTML(val2) : '-'}
+                        </td>
+
+                        <td style="
+                            border: 1px solid #cbd5e1;
+                            padding: 6px;
+                        ">
+                            ${val3 ? escapeHTML(val3) : '-'}
+                        </td>
+
+                    </tr>
+                `;
+            });
+
+
+            pdfHTML += `
+                    </tbody>
+
+                </table>
+            `;
+        }
+
+
+        // --------------------------------------------------------
+        // DECISIÓN
+        // --------------------------------------------------------
+
+        if (caseData.decisionPrompt) {
+
+            const decisionElement =
+                document.getElementById('decision_text');
+
+
+            const decisionValue =
+                decisionElement
+                    ? decisionElement.value
+                    : '';
+
+
+            pdfHTML += `
+
+                <div style="
+                    margin-bottom: 14px;
+                    page-break-inside: avoid;
+                ">
+
+                    <p style="
+                        font-size: 11px;
+                        font-weight: 700;
+                        color: #ef4444;
+                        margin-bottom: 4px;
+                    ">
+                        ${caseData.decisionPrompt}
+                    </p>
+
+                    <div style="
+                        font-size: 11px;
+                        background: #fff5f5;
+                        border: 1px solid #fecaca;
+                        padding: 8px 12px;
+                        border-radius: 6px;
+                        color: #991b1b;
+                    ">
+                        ${
+                            decisionValue
+                                ? escapeHTML(decisionValue).replace(/\n/g, '<br>')
+                                : '<em style="color:#94a3b8">Sin decisión registrada</em>'
+                        }
+                    </div>
+
+                </div>
+            `;
+        }
+
+
+        // --------------------------------------------------------
+        // CONSOLIDACIÓN
+        // --------------------------------------------------------
+
+        const fillValues = {
+            fill_1: document.getElementById('fill_1')?.value || '',
+            fill_2a: document.getElementById('fill_2a')?.value || '',
+            fill_2b: document.getElementById('fill_2b')?.value || '',
+            fill_3a: document.getElementById('fill_3a')?.value || '',
+            fill_3b: document.getElementById('fill_3b')?.value || '',
+            fill_3c: document.getElementById('fill_3c')?.value || '',
+            fill_4a: document.getElementById('fill_4a')?.value || '',
+            fill_4b: document.getElementById('fill_4b')?.value || ''
+        };
+
+
+        let consolidTextPDF =
+            caseData.consolidationText;
+
+
+        Object.keys(fillValues).forEach(id => {
+
+            const value =
+                fillValues[id];
+
+            const pattern =
+                new RegExp(
+                    `<input[^>]*id="${id}"[^>]*>`,
+                    'i'
+                );
+
+
+            consolidTextPDF =
+                consolidTextPDF.replace(
+                    pattern,
+                    `<u><strong>${
+                        value
+                            ? escapeHTML(value)
+                            : '______'
+                    }</strong></u>`
+                );
+        });
+
+
+        pdfHTML += `
+
+            <div style="
+                background-color: #fffbeef5;
+                border-left: 4px solid #f59e0b;
+                padding: 10px 14px;
+                border-radius: 6px;
+                margin-top: 14px;
+                font-size: 11px;
+                color: #78350f;
+                page-break-inside: avoid;
+            ">
+
+                <strong>
+                    Lo aprendido en el Caso
+                    (Cierre de Consolidación):
+                </strong>
+
+                <br>
+
+                ${consolidTextPDF}
+
+            </div>
+
+            </div>
+        `;
+
+
+        // --------------------------------------------------------
+        // PARTE II
+        // --------------------------------------------------------
+
+        pdfHTML += `
+
+            <div style="
+                margin-top: 24px;
+            ">
+
+                <h2 style="
+                    font-size: 15px;
+                    font-weight: 800;
+                    color: #10b981;
+                    border-bottom: 1px solid #e2e8f0;
+                    padding-bottom: 4px;
+                    margin-bottom: 12px;
+                ">
+                    PARTE II:
+                    Integración y Cierre General de Clase
+                </h2>
+
+
+                <p style="
+                    font-size: 11px;
+                    font-weight: 700;
+                    margin-bottom: 6px;
+                ">
+                    1. Orden Secuencial de la Cadena Preanalítica:
+                </p>
+
+
+                <div style="
+                    font-size: 10px;
+                    background: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    padding: 10px;
+                    border-radius: 6px;
+                    margin-bottom: 14px;
+                ">
+        `;
+
+
+        document
+            .querySelectorAll('.seq-select')
+            .forEach(select => {
+
+                const code =
+                    select.getAttribute('data-code');
+
+                const position =
+                    select.value || '?';
+
+                const item =
+                    SEQUENCE_ITEMS.find(
+                        item => item.code === code
+                    );
+
+
+                if (item) {
+
+                    pdfHTML += `
+
+                        <span style="
+                            display:inline-block;
+                            margin-right:12px;
+                            margin-bottom:4px;
+                        ">
+
+                            <strong>
+                                [ ${position}° ]
+                            </strong>
+
+                            ${item.name}
+
+                        </span>
+                    `;
+                }
+            });
+
+
+        pdfHTML += `
+
+                </div>
+
+
+                <div style="
+                    margin-bottom:14px;
+                    page-break-inside: avoid;
+                ">
+
+                    <p style="
+                        font-size:11px;
+                        font-weight:700;
+                        color:#0f172a;
+                        margin-bottom:4px;
+                    ">
+                        2. Gran Conclusión de Aula:
+                    </p>
+
+                    <div style="
+                        font-size:11px;
+                        background:#fafafa;
+                        border:1px solid #e2e8f0;
+                        padding:8px 12px;
+                        border-radius:6px;
+                        color:#334155;
+                    ">
+                        ${escapeHTML(grandConclusion).replace(/\n/g, '<br>')}
+                    </div>
+
+                </div>
+
+
+                <div style="
+                    margin-bottom:14px;
+                    page-break-inside: avoid;
+                ">
+
+                    <p style="
+                        font-size:11px;
+                        font-weight:700;
+                        color:#0f172a;
+                        margin-bottom:4px;
+                    ">
+                        3. Verificación de Premisa Fundamental (V/F):
+                    </p>
+
+                    <div style="
+                        font-size:11px;
+                        background:#f8fafc;
+                        border:1px solid #e2e8f0;
+                        padding:8px 12px;
+                        border-radius:6px;
+                        font-weight:800;
+                        color:#0f172a;
+                    ">
+
+                        Respuesta Seleccionada:
+
+                        <span style="
+                            color:${
+                                vfSelection.value === 'VERDADERO'
+                                    ? '#10b981'
+                                    : '#ef4444'
+                            };
+                        ">
+                            ${vfSelection.value}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+        `;
+
+
+        // --------------------------------------------------------
+        // INSERTAR EN EL DOM
+        // --------------------------------------------------------
+
+        pdfWrapper.innerHTML =
+            pdfHTML;
+
+        document.body.appendChild(
+            pdfWrapper
+        );
+
+
+        // --------------------------------------------------------
+        // CONFIGURACIÓN PDF
+        // --------------------------------------------------------
+
+        const cleanGroupName =
+            groupData.number
+                .replace(/[^a-zA-Z0-9]/g, '_');
+
+
+        const opt = {
+
+            margin: [10, 10, 10, 10],
+
+            filename:
+                `Microbiologia_${cleanGroupName}_Caso${selectedCaseId}.pdf`,
+
+            image: {
+                type: 'jpeg',
+                quality: 0.98
+            },
+
+            html2canvas: {
+
+                scale: 2,
+
+                useCORS: true,
+
+                allowTaint: false,
+
+                backgroundColor: '#ffffff',
+
+                logging: false,
+
+                scrollX: 0,
+
+                scrollY: 0,
+
+                windowWidth:
+                    pdfWrapper.scrollWidth,
+
+                windowHeight:
+                    pdfWrapper.scrollHeight
+            },
+
+            jsPDF: {
+
+                unit: 'mm',
+
+                format: 'a4',
+
+                orientation: 'portrait',
+
+                compress: true
+            },
+
+            pagebreak: {
+
+                mode: [
+                    'css',
+                    'legacy'
+                ],
+
+                avoid: [
+                    '.form-group',
+                    'table',
+                    '.fill-box'
+                ]
+            }
+        };
+
+
+        // --------------------------------------------------------
+        // ESPERAR AL CICLO DE RENDERIZADO
+        // --------------------------------------------------------
+
+        await new Promise(resolve => {
+
+            requestAnimationFrame(() => {
+
+                requestAnimationFrame(resolve);
+
+            });
+
+        });
+
+
+        // --------------------------------------------------------
+        // GENERAR PDF
+        // --------------------------------------------------------
+
+        try {
+
+            await html2pdf()
+                .set(opt)
+                .from(pdfWrapper)
+                .save();
+
+
+            alert(
+                "¡Documento PDF generado y descargado exitosamente!"
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Error durante la generación del PDF:",
+                error
+            );
+
+
+            alert(
+                "Ocurrió un error al generar el PDF. Revisa la consola del navegador (F12) para conocer el detalle."
+            );
+
+
+        } finally {
+
+            // ----------------------------------------------------
+            // LIMPIEZA
+            // ----------------------------------------------------
+
+            if (pdfWrapper.parentNode) {
+
+                pdfWrapper.parentNode.removeChild(
+                    pdfWrapper
+                );
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
