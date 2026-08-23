@@ -4,13 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Microbiología — Análisis Guiado de Casos Clínicos</title>
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- FontAwesome para Iconografía -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Librería HTML2PDF para generación de documentos -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- html2pdf -->
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js">
+    </script>
+
     <style>
         :root {
             --brand-primary: #0f172a;
@@ -43,7 +49,7 @@
             color: var(--text-main);
             min-height: 100vh;
             padding: 24px 16px;
-            background-image: 
+            background-image:
                 radial-gradient(at 0% 0%, rgba(2, 132, 199, 0.05) 0px, transparent 50%),
                 radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
         }
@@ -104,7 +110,7 @@
             font-size: 0.95rem;
         }
 
-        /* VISTAS (SPA) */
+        /* VISTAS */
         .view-panel {
             display: none;
             animation: fadeIn 0.3s ease-in-out forwards;
@@ -115,8 +121,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* CARDS */
@@ -151,7 +164,9 @@
             margin-bottom: 8px;
         }
 
-        .form-input, .form-textarea, .form-select {
+        .form-input,
+        .form-textarea,
+        .form-select {
             width: 100%;
             padding: 12px 16px;
             border: 1.5px solid var(--border);
@@ -167,7 +182,9 @@
             min-height: 80px;
         }
 
-        .form-input:focus, .form-textarea:focus, .form-select:focus {
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
             outline: none;
             border-color: var(--brand-accent);
             background: #ffffff;
@@ -261,7 +278,7 @@
             margin-bottom: 20px;
         }
 
-        /* TABLAS INTERACTIVAS */
+        /* TABLAS */
         .custom-table {
             width: 100%;
             border-collapse: collapse;
@@ -269,7 +286,8 @@
             margin-bottom: 20px;
         }
 
-        .custom-table th, .custom-table td {
+        .custom-table th,
+        .custom-table td {
             padding: 12px 14px;
             border: 1px solid var(--border);
             text-align: left;
@@ -282,7 +300,7 @@
             font-weight: 700;
         }
 
-        /* CADENA PREANALÍTICA (SECUENCIA) */
+        /* CADENA PREANALÍTICA */
         .sequence-list {
             display: flex;
             flex-direction: column;
@@ -306,7 +324,7 @@
             font-weight: 700;
         }
 
-        /* CONSOLIDACIÓN (FILL IN BLANKS) */
+        /* CONSOLIDACIÓN */
         .fill-box {
             background: #fffbeef5;
             border: 1px solid #fde68a;
@@ -363,163 +381,436 @@
         }
     </style>
 </head>
+
 <body>
 
 <div class="app-container">
 
     <!-- HEADER GENERAL -->
     <header class="app-header">
-        <div class="badge-tag"><i class="fa-solid fa-microscope"></i> Microbiología | Auxiliar de Enfermería</div>
+        <div class="badge-tag">
+            <i class="fa-solid fa-microscope"></i>
+            Microbiología | Auxiliar de Enfermería
+        </div>
+
         <h1>Análisis Guiado de Casos Clínicos</h1>
-        <p>Toma, Manejo y Bioseguridad de Muestras Microbiológicas (60 min)</p>
+
+        <p>
+            Toma, Manejo y Bioseguridad de Muestras Microbiológicas (60 min)
+        </p>
     </header>
 
-    <!-- VISTA 1: REGISTRO DE GRUPO Y SELECCIÓN DE CASO -->
+    <!-- VISTA 1 -->
     <div id="view-registration" class="view-panel active">
+
         <div class="card">
+
             <div class="section-header-title">
-                <i class="fa-solid fa-users" style="color: var(--brand-accent);"></i> 1. Registro del Equipo de Trabajo
+                <i class="fa-solid fa-users"
+                   style="color: var(--brand-accent);"></i>
+
+                1. Registro del Equipo de Trabajo
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="inputGroupNum">Número o Nombre del Grupo:</label>
-                <input type="text" id="inputGroupNum" class="form-input" placeholder="Ej. Grupo N° 3">
+
+                <label class="form-label" for="inputGroupNum">
+                    Número o Nombre del Grupo:
+                </label>
+
+                <input
+                    type="text"
+                    id="inputGroupNum"
+                    class="form-input"
+                    placeholder="Ej. Grupo N° 3"
+                >
+
             </div>
 
             <div class="form-group">
-                <label class="form-label">Integrantes del Equipo (Nombre y Apellido):</label>
-                <input type="text" id="member1" class="form-input" placeholder="Integrante 1" style="margin-bottom: 8px;">
-                <input type="text" id="member2" class="form-input" placeholder="Integrante 2" style="margin-bottom: 8px;">
-                <input type="text" id="member3" class="form-input" placeholder="Integrante 3" style="margin-bottom: 8px;">
-                <input type="text" id="member4" class="form-input" placeholder="Integrante 4">
+
+                <label class="form-label">
+                    Integrantes del Equipo (Nombre y Apellido):
+                </label>
+
+                <input
+                    type="text"
+                    id="member1"
+                    class="form-input"
+                    placeholder="Integrante 1"
+                    style="margin-bottom: 8px;"
+                >
+
+                <input
+                    type="text"
+                    id="member2"
+                    class="form-input"
+                    placeholder="Integrante 2"
+                    style="margin-bottom: 8px;"
+                >
+
+                <input
+                    type="text"
+                    id="member3"
+                    class="form-input"
+                    placeholder="Integrante 3"
+                    style="margin-bottom: 8px;"
+                >
+
+                <input
+                    type="text"
+                    id="member4"
+                    class="form-input"
+                    placeholder="Integrante 4"
+                >
+
             </div>
 
-            <div class="section-header-title" style="margin-top: 28px;">
-                <i class="fa-solid fa-folder-open" style="color: var(--brand-accent);"></i> 2. Selecciona el Caso Asignado por el Docente
+            <div
+                class="section-header-title"
+                style="margin-top: 28px;"
+            >
+
+                <i
+                    class="fa-solid fa-folder-open"
+                    style="color: var(--brand-accent);"
+                ></i>
+
+                2. Selecciona el Caso Asignado por el Docente
+
             </div>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
-                Cada equipo analizará un caso clínico principal y posteriormente resolverá el Bloque Integrador de clase.
+
+            <p
+                style="
+                    font-size: 0.85rem;
+                    color: var(--text-muted);
+                    margin-bottom: 12px;
+                "
+            >
+                Cada equipo analizará un caso clínico principal y posteriormente
+                resolverá el Bloque Integrador de clase.
             </p>
 
             <div class="cases-grid">
-                <div class="case-card" id="case-card-1" onclick="selectCase(1)">
+
+                <div
+                    class="case-card"
+                    id="case-card-1"
+                    onclick="selectCase(1)"
+                >
                     <div>
                         <div class="case-title">Caso 1</div>
                         <div class="case-sub">Infección Respiratoria</div>
                     </div>
-                    <div class="status-tag">Seleccionar</div>
+
+                    <div class="status-tag">
+                        Seleccionar
+                    </div>
                 </div>
 
-                <div class="case-card" id="case-card-2" onclick="selectCase(2)">
+                <div
+                    class="case-card"
+                    id="case-card-2"
+                    onclick="selectCase(2)"
+                >
                     <div>
                         <div class="case-title">Caso 2</div>
                         <div class="case-sub">Infección Urinaria</div>
                     </div>
-                    <div class="status-tag">Seleccionar</div>
+
+                    <div class="status-tag">
+                        Seleccionar
+                    </div>
                 </div>
 
-                <div class="case-card" id="case-card-3" onclick="selectCase(3)">
+                <div
+                    class="case-card"
+                    id="case-card-3"
+                    onclick="selectCase(3)"
+                >
                     <div>
                         <div class="case-title">Caso 3</div>
                         <div class="case-sub">Infección Gastrointestinal</div>
                     </div>
-                    <div class="status-tag">Seleccionar</div>
+
+                    <div class="status-tag">
+                        Seleccionar
+                    </div>
                 </div>
 
-                <div class="case-card" id="case-card-4" onclick="selectCase(4)">
+                <div
+                    class="case-card"
+                    id="case-card-4"
+                    onclick="selectCase(4)"
+                >
                     <div>
                         <div class="case-title">Caso 4</div>
                         <div class="case-sub">Infección Cutánea</div>
                     </div>
-                    <div class="status-tag">Seleccionar</div>
-                </div>
-            </div>
 
-            <div style="margin-top: 28px;">
-                <button id="btnStartActivity" class="btn-primary" disabled onclick="startActivity()">
-                    Iniciar Análisis del Caso <i class="fa-solid fa-arrow-right"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- VISTA 2: DESARROLLO DE LA ACTIVIDAD -->
-    <div id="view-activity" class="view-panel">
-        
-        <!-- Banner Grupo -->
-        <div class="group-banner">
-            <div>
-                <span style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase;" id="displayGroupTitle">Grupo</span>
-                <h3 id="displayMembers" style="color: var(--brand-primary); font-size: 0.95rem; font-weight: 600;">-</h3>
-            </div>
-            <div>
-                <span class="badge-tag" id="displayCaseTag">Caso -</span>
-            </div>
-        </div>
-
-        <!-- PARTE I: CASO ASIGNADO -->
-        <div class="card">
-            <div class="section-header-title">
-                <i class="fa-solid fa-notes-medical" style="color: var(--brand-accent);"></i> PARTE I: Análisis del Caso Asignado
-            </div>
-
-            <!-- Contenedor Dinámico del Caso -->
-            <div id="caseDynamicContent">
-                <!-- Inyectado con JS -->
-            </div>
-        </div>
-
-        <!-- PARTE II: BLOQUE INTEGRADOR GENERAL -->
-        <div class="card">
-            <div class="section-header-title">
-                <i class="fa-solid fa-layer-group" style="color: var(--brand-emerald);"></i> PARTE II: Integración y Cierre General de Clase
-            </div>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
-                <em>Esta sección es de carácter obligatorio para todos los grupos de la clase.</em>
-            </p>
-
-            <!-- 1. Cadena Preanalítica -->
-            <div class="form-group">
-                <label class="form-label">1. Cadena de Valor Preanalítica (Ordenamiento de Pasos del 1 al 7)</label>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
-                    Asigne el número de orden (1 a 7) que corresponde a cada paso para reconstruir la secuencia correcta:
-                </p>
-
-                <div class="sequence-list" id="sequenceContainer">
-                    <!-- Se llena con JS -->
-                </div>
-            </div>
-
-            <!-- 2. Gran Conclusión -->
-            <div class="form-group" style="margin-top: 24px;">
-                <label class="form-label" for="inputGrandConclusion">2. Gran Conclusión de Aula:</label>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">En sus palabras: ¿Qué hace que una toma de muestra sea un procedimiento técnico bien hecho y no un simple trámite?</p>
-                <textarea id="inputGrandConclusion" class="form-textarea" placeholder="Escriba aquí la conclusión consensuada del grupo..."></textarea>
-            </div>
-
-            <!-- 3. Falso o Verdadero -->
-            <div class="form-group" style="margin-top: 24px;">
-                <label class="form-label">3. Verificación de Premisa Fundamental (Falso o Verdadero):</label>
-                <div style="background: #f8fafc; border: 1px solid var(--border); padding: 16px; border-radius: var(--radius-md); margin-top: 8px;">
-                    <p style="font-size: 0.9rem; color: #334155; margin-bottom: 12px; line-height: 1.5;">
-                        <em>"Una muestra microbiológica ÚTIL y SEGURA requiere que: Sea seleccionada según el sitio anatómico real de la infección, se obtenga mediante técnica aséptica adecuada a la condición del paciente, conserve su identidad e integridad sin demoras en el transporte, y se manipule bajo strictly medidas de bioseguridad para proteger al personal y al espécimen."</em>
-                    </p>
-                    <div style="display: flex; gap: 20px;">
-                        <label style="font-weight: 700; cursor: pointer; color: var(--brand-primary);">
-                            <input type="radio" name="vf_option" value="FALSO"> FALSO
-                        </label>
-                        <label style="font-weight: 700; cursor: pointer; color: var(--brand-emerald);">
-                            <input type="radio" name="vf_option" value="VERDADERO"> VERDADERO
-                        </label>
+                    <div class="status-tag">
+                        Seleccionar
                     </div>
                 </div>
+
             </div>
 
             <div style="margin-top: 28px;">
-                <button class="btn-primary" onclick="submitWork()">
-                    Finalizar y Generar PDF de la Actividad <i class="fa-solid fa-file-pdf"></i>
+
+                <button
+                    id="btnStartActivity"
+                    class="btn-primary"
+                    disabled
+                    onclick="startActivity()"
+                >
+                    Iniciar Análisis del Caso
+                    <i class="fa-solid fa-arrow-right"></i>
                 </button>
+
             </div>
+
+        </div>
+
+    </div>
+
+    <!-- VISTA 2 -->
+    <div id="view-activity" class="view-panel">
+
+        <div class="group-banner">
+
+            <div>
+
+                <span
+                    style="
+                        font-size: 0.75rem;
+                        font-weight: 800;
+                        color: var(--text-muted);
+                        text-transform: uppercase;
+                    "
+                    id="displayGroupTitle"
+                >
+                    Grupo
+                </span>
+
+                <h3
+                    id="displayMembers"
+                    style="
+                        color: var(--brand-primary);
+                        font-size: 0.95rem;
+                        font-weight: 600;
+                    "
+                >
+                    -
+                </h3>
+
+            </div>
+
+            <div>
+
+                <span
+                    class="badge-tag"
+                    id="displayCaseTag"
+                >
+                    Caso -
+                </span>
+
+            </div>
+
+        </div>
+
+        <!-- PARTE I -->
+        <div class="card">
+
+            <div class="section-header-title">
+
+                <i
+                    class="fa-solid fa-notes-medical"
+                    style="color: var(--brand-accent);"
+                ></i>
+
+                PARTE I: Análisis del Caso Asignado
+
+            </div>
+
+            <div id="caseDynamicContent"></div>
+
+        </div>
+
+        <!-- PARTE II -->
+        <div class="card">
+
+            <div class="section-header-title">
+
+                <i
+                    class="fa-solid fa-layer-group"
+                    style="color: var(--brand-emerald);"
+                ></i>
+
+                PARTE II: Integración y Cierre General de Clase
+
+            </div>
+
+            <p
+                style="
+                    font-size: 0.85rem;
+                    color: var(--text-muted);
+                    margin-bottom: 16px;
+                "
+            >
+                <em>
+                    Esta sección es de carácter obligatorio para todos los grupos
+                    de la clase.
+                </em>
+            </p>
+
+            <!-- 1 -->
+            <div class="form-group">
+
+                <label class="form-label">
+                    1. Cadena de Valor Preanalítica
+                    (Ordenamiento de Pasos del 1 al 7)
+                </label>
+
+                <p
+                    style="
+                        font-size: 0.85rem;
+                        color: var(--text-muted);
+                        margin-bottom: 12px;
+                    "
+                >
+                    Asigne el número de orden (1 a 7) que corresponde a cada paso
+                    para reconstruir la secuencia correcta:
+                </p>
+
+                <div
+                    class="sequence-list"
+                    id="sequenceContainer"
+                ></div>
+
+            </div>
+
+            <!-- 2 -->
+            <div
+                class="form-group"
+                style="margin-top: 24px;"
+            >
+
+                <label
+                    class="form-label"
+                    for="inputGrandConclusion"
+                >
+                    2. Gran Conclusión de Aula:
+                </label>
+
+                <p
+                    style="
+                        font-size: 0.85rem;
+                        color: var(--text-muted);
+                        margin-bottom: 8px;
+                    "
+                >
+                    En sus palabras: ¿Qué hace que una toma de muestra sea un
+                    procedimiento técnico bien hecho y no un simple trámite?
+                </p>
+
+                <textarea
+                    id="inputGrandConclusion"
+                    class="form-textarea"
+                    placeholder="Escriba aquí la conclusión consensuada del grupo..."
+                ></textarea>
+
+            </div>
+
+            <!-- 3 -->
+            <div
+                class="form-group"
+                style="margin-top: 24px;"
+            >
+
+                <label class="form-label">
+                    3. Verificación de Premisa Fundamental
+                    (Falso o Verdadero):
+                </label>
+
+                <div
+                    style="
+                        background: #f8fafc;
+                        border: 1px solid var(--border);
+                        padding: 16px;
+                        border-radius: var(--radius-md);
+                        margin-top: 8px;
+                    "
+                >
+
+                    <p
+                        style="
+                            font-size: 0.9rem;
+                            color: #334155;
+                            margin-bottom: 12px;
+                            line-height: 1.5;
+                        "
+                    >
+                        <em>
+                            "Una muestra microbiológica ÚTIL y SEGURA requiere que:
+                            Sea seleccionada según el sitio anatómico real de la
+                            infección, se obtenga mediante técnica aséptica adecuada
+                            a la condición del paciente, conserve su identidad e
+                            integridad sin demoras en el transporte, y se manipule
+                            bajo estrictas medidas de bioseguridad para proteger al
+                            personal y al espécimen."
+                        </em>
+                    </p>
+
+                    <div style="display: flex; gap: 20px;">
+
+                        <label
+                            style="
+                                font-weight: 700;
+                                cursor: pointer;
+                                color: var(--brand-primary);
+                            "
+                        >
+                            <input
+                                type="radio"
+                                name="vf_option"
+                                value="FALSO"
+                            >
+                            FALSO
+                        </label>
+
+                        <label
+                            style="
+                                font-weight: 700;
+                                cursor: pointer;
+                                color: var(--brand-emerald);
+                            "
+                        >
+                            <input
+                                type="radio"
+                                name="vf_option"
+                                value="VERDADERO"
+                            >
+                            VERDADERO
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div style="margin-top: 28px;">
+
+                <button
+                    class="btn-primary"
+                    onclick="submitWork()"
+                >
+                    Finalizar y Generar PDF de la Actividad
+                    <i class="fa-solid fa-file-pdf"></i>
+                </button>
+
+            </div>
+
         </div>
 
     </div>
@@ -527,15 +818,20 @@
 </div>
 
 <script>
-    // ============================================================
-    // DATOS DE LOS 4 CASOS CLÍNICOS
-    // ============================================================
+
+    /* ============================================================
+       DATOS DE LOS CASOS
+       ============================================================ */
 
     const CASES_DATA = {
+
         1: {
             title: "CASO 1 — INFECCIÓN RESPIRATORIA",
             focus: "Selección y Representatividad de la Muestra",
-            scenario: "Un paciente adulto consulta por fiebre, tos productiva, dolor torácico y dificultad respiratoria. Por sus manifestaciones clínicas se sospecha una infección de las vías respiratorias inferiores y se solicita un estudio microbiológico. Durante la atención, se recibe un recipiente con material para el estudio, el cual está constituido principalmente por <strong>saliva</strong>.",
+
+            scenario:
+                "Un paciente adulto consulta por fiebre, tos productiva, dolor torácico y dificultad respiratoria. Por sus manifestaciones clínicas se sospecha una infección de las vías respiratorias inferiores y se solicita un estudio microbiológico. Durante la atención, se recibe un recipiente con material para el estudio, el cual está constituido principalmente por <strong>saliva</strong>.",
+
             questions: [
                 {
                     id: "q1_1",
@@ -554,15 +850,23 @@
                     text: "4. Consecuencia microbiológica: Si procesamos una muestra rica en saliva y microbiota oral en lugar de secreción profunda, ¿qué problema de interpretación se genera en el laboratorio?"
                 }
             ],
-            decisionPrompt: "¿Aceptamos o rechazamos la muestra salival para el estudio de vías respiratorias inferiores? Justifiquen su respuesta técnica:",
+
+            decisionPrompt:
+                "¿Aceptamos o rechazamos la muestra salival para el estudio de vías respiratorias inferiores? Justifiquen su respuesta técnica:",
+
             hasTable: false,
-            consolidationText: 'Para seleccionar una muestra microbiológica adecuada, no basta con saber la enfermedad; debemos verificar que el espécimen sea <input type="text" class="fill-input" id="fill_1" placeholder="palabra clave"> del sitio anatómico que queremos investigar.'
+
+            consolidationText:
+                'Para seleccionar una muestra microbiológica adecuada, no basta con saber la enfermedad; debemos verificar que el espécimen sea <input type="text" class="fill-input" id="fill_1" placeholder="palabra clave"> del sitio anatómico que queremos investigar.'
         },
 
         2: {
             title: "CASO 2 — INFECCIÓN URINARIA",
             focus: "Obtención de la Muestra y Prevención de Contaminación",
-            scenario: "<strong>Paciente A:</strong> Mujer de 35 años con disuria, polaquiuria y dolor suprapúbico. Se solicita urocultivo (micción espontánea).<br><strong>Paciente B:</strong> Paciente con los mismos síntomas, pero portador de un catéter urinario permanente (sonda vesical).",
+
+            scenario:
+                "<strong>Paciente A:</strong> Mujer de 35 años con disuria, polaquiuria y dolor suprapúbico. Se solicita urocultivo (micción espontánea).<br><strong>Paciente B:</strong> Paciente con los mismos síntomas, pero portador de un catéter urinario permanente (sonda vesical).",
+
             questions: [
                 {
                     id: "q2_1",
@@ -577,12 +881,15 @@
                     text: "3. Técnica de obtención en Paciente B: En el paciente con sonda vesical, ¿de dónde y cómo debemos tomar la muestra para urocultivo? ¿Por qué está contraindicado tomarla de la bolsa recolectora?"
                 }
             ],
+
             hasTable: true,
+
             tableHeaders: [
                 "Condición del Paciente",
                 "Sitio / Puerto de Obtención",
                 "Riesgo Principal de Contaminación"
             ],
+
             tableRows: [
                 {
                     col1: "Paciente A (Micción espontánea)",
@@ -595,13 +902,18 @@
                     id3: "c2_pB_riesgo"
                 }
             ],
-            consolidationText: 'Una muestra correcta no depende solo del tipo de espécimen (orina), sino de adecuar la (o el) <input type="text" class="fill-input" id="fill_2a" placeholder="técnica / método"> de obtención a la condición particular del paciente para evitar la <input type="text" class="fill-input" id="fill_2b" placeholder="efecto no deseado">.'
+
+            consolidationText:
+                'Una muestra correcta no depende solo del tipo de espécimen (orina), sino de adecuar la (o el) <input type="text" class="fill-input" id="fill_2a" placeholder="técnica / método"> de obtención a la condición particular del paciente para evitar la <input type="text" class="fill-input" id="fill_2b" placeholder="efecto no deseado">.'
         },
 
         3: {
             title: "CASO 3 — INFECCIÓN GASTROINTESTINAL",
             focus: "Identificación, Trazabilidad, Conservación y Transporte",
-            scenario: "Un paciente consulta por diarrea aguda y fiebre. Se solicita coprocultivo. La muestra de materia fecal es recolectada en recipiente adecuado. Sin embargo, ocurren tres anomalías:<br>1. La etiqueta del recipiente no coincide exactamente con la solicitud médica.<br>2. El recipiente queda en mesa de trabajo a temperatura ambiente durante más de 6 horas.<br>3. No se utilizó medio de transporte para conservar los patógenos entéricos.",
+
+            scenario:
+                "Un paciente consulta por diarrea aguda y fiebre. Se solicita coprocultivo. La muestra de materia fecal es recolectada en recipiente adecuado. Sin embargo, ocurren tres anomalías:<br>1. La etiqueta del recipiente no coincide exactamente con la solicitud médica.<br>2. El recipiente queda en mesa de trabajo a temperatura ambiente durante más de 6 horas.<br>3. No se utilizó medio de transporte para conservar los patógenos entéricos.",
+
             questions: [
                 {
                     id: "q3_1",
@@ -616,15 +928,23 @@
                     text: "3. El rol del Transporte: ¿Por qué el transporte se considera parte crítica de la fase preanalítica y no un simple traslado físico?"
                 }
             ],
-            decisionPrompt: "Decisión del Grupo: Identifiquen en qué momento específico del recorrido de la muestra se perdió la calidad preanalítica y qué medida correctiva correspondía aplicar:",
+
+            decisionPrompt:
+                "Decisión del Grupo: Identifiquen en qué momento específico del recorrido de la muestra se perdió la calidad preanalítica y qué medida correctiva correspondía aplicar:",
+
             hasTable: false,
-            consolidationText: 'Una muestra correctamente obtenida pierde su utilidad diagnóstica si se interrumpe la <input type="text" class="fill-input" id="fill_3a" placeholder="condición 1"> del paciente o si fallan las condiciones de <input type="text" class="fill-input" id="fill_3b" placeholder="condición 2"> y <input type="text" class="fill-input" id="fill_3c" placeholder="condición 3"> durante el traslado.'
+
+            consolidationText:
+                'Una muestra correctamente obtenida pierde su utilidad diagnóstica si se interrumpe la <input type="text" class="fill-input" id="fill_3a" placeholder="condición 1"> del paciente o si fallan las condiciones de <input type="text" class="fill-input" id="fill_3b" placeholder="condición 2"> y <input type="text" class="fill-input" id="fill_3c" placeholder="condición 3"> durante el traslado.'
         },
 
         4: {
             title: "CASO 4 — INFECCIÓN CUTÁNEA",
             focus: "Calidad del Espécimen y Bioseguridad en la Toma",
-            scenario: "Un paciente hospitalizado presenta una herida quirúrgica en la pierna con eritema, secreción purulenta profunda y dolor. La auxiliar de enfermería realiza la toma de muestra frotando un hisopo únicamente en la piel superficial alrededor de la herida. Utiliza guantes. Al cerrar el recipiente de forma apresurada, este gotea y derrama secreción sobre la gradilla de transporte durante el traslado.",
+
+            scenario:
+                "Un paciente hospitalizado presenta una herida quirúrgica en la pierna con eritema, secreción purulenta profunda y dolor. La auxiliar de enfermería realiza la toma de muestra frotando un hisopo únicamente en la piel superficial alrededor de la herida. Utiliza guantes. Al cerrar el recipiente de forma apresurada, este gotea y derrama secreción sobre la gradilla de transporte durante el traslado.",
+
             questions: [
                 {
                     id: "q4_1",
@@ -639,12 +959,15 @@
                     text: "3. Manejo del Incidente (Contención): Ante el derrame y fuga de la muestra en el contenedor de traslado, ¿cuáles son los dos aspectos que se vieron comprometidos simultáneamente?"
                 }
             ],
+
             hasTable: true,
+
             tableHeaders: [
                 "Dimensión",
                 "Problema Detectado en el Caso",
                 "Acción Correctiva Requerida"
             ],
+
             tableRows: [
                 {
                     col1: "Calidad de la Muestra",
@@ -657,29 +980,60 @@
                     id3: "c4_bio_acc"
                 }
             ],
-            consolidationText: 'El procedimiento de toma de muestra debe garantizar de forma simultánea la <input type="text" class="fill-input" id="fill_4a" placeholder="condición espécimen"> del espécimen y la <input type="text" class="fill-input" id="fill_4b" placeholder="condición personal"> del personal de salud mediante el control de riesgos biológicos.'
+
+            consolidationText:
+                'El procedimiento de toma de muestra debe garantizar de forma simultánea la <input type="text" class="fill-input" id="fill_4a" placeholder="condición espécimen"> del espécimen y la <input type="text" class="fill-input" id="fill_4b" placeholder="condición personal"> del personal de salud mediante el control de riesgos biológicos.'
         }
     };
 
 
-    // ============================================================
-    // ESLABONES DE LA CADENA PREANALÍTICA
-    // ============================================================
+    /* ============================================================
+       CADENA PREANALÍTICA
+       ============================================================ */
 
     const SEQUENCE_ITEMS = [
-        { code: "A", name: "A. Obtención Aséptica" },
-        { code: "B", name: "B. Trazabilidad e Identificación" },
-        { code: "C", name: "C. Sitio Anatómico" },
-        { code: "D", name: "D. Conservación y Transporte" },
-        { code: "E", name: "E. Verificar Representatividad" },
-        { code: "F", name: "F. Bioseguridad" },
-        { code: "G", name: "G. Seleccionar Espécimen" }
+
+        {
+            code: "A",
+            name: "A. Obtención Aséptica"
+        },
+
+        {
+            code: "B",
+            name: "B. Trazabilidad e Identificación"
+        },
+
+        {
+            code: "C",
+            name: "C. Sitio Anatómico"
+        },
+
+        {
+            code: "D",
+            name: "D. Conservación y Transporte"
+        },
+
+        {
+            code: "E",
+            name: "E. Verificar Representatividad"
+        },
+
+        {
+            code: "F",
+            name: "F. Bioseguridad"
+        },
+
+        {
+            code: "G",
+            name: "G. Seleccionar Espécimen"
+        }
+
     ];
 
 
-    // ============================================================
-    // ESTADO LOCAL
-    // ============================================================
+    /* ============================================================
+       ESTADO
+       ============================================================ */
 
     let selectedCaseId = null;
 
@@ -689,9 +1043,9 @@
     };
 
 
-    // ============================================================
-    // SELECCIÓN DEL CASO
-    // ============================================================
+    /* ============================================================
+       SELECCIÓN DEL CASO
+       ============================================================ */
 
     function selectCase(caseId) {
 
@@ -699,7 +1053,9 @@
 
         document
             .querySelectorAll('.case-card')
-            .forEach(card => card.classList.remove('selected'));
+            .forEach(card => {
+                card.classList.remove('selected');
+            });
 
         document
             .getElementById(`case-card-${caseId}`)
@@ -708,10 +1064,6 @@
         checkRegistrationForm();
     }
 
-
-    // ============================================================
-    // VALIDACIÓN DEL REGISTRO
-    // ============================================================
 
     function checkRegistrationForm() {
 
@@ -730,12 +1082,15 @@
 
     document
         .getElementById('inputGroupNum')
-        .addEventListener('input', checkRegistrationForm);
+        .addEventListener(
+            'input',
+            checkRegistrationForm
+        );
 
 
-    // ============================================================
-    // INICIO DE LA ACTIVIDAD
-    // ============================================================
+    /* ============================================================
+       INICIO DE LA ACTIVIDAD
+       ============================================================ */
 
     function startActivity() {
 
@@ -750,36 +1105,38 @@
             document.getElementById('member2').value.trim(),
             document.getElementById('member3').value.trim(),
             document.getElementById('member4').value.trim()
-        ].filter(member => member !== "");
+        ].filter(
+            member => member !== ""
+        );
 
 
-        // Banner
-
-        document.getElementById('displayGroupTitle').innerText =
+        document
+            .getElementById('displayGroupTitle')
+            .innerText =
             groupData.number;
 
-        document.getElementById('displayMembers').innerText =
+
+        document
+            .getElementById('displayMembers')
+            .innerText =
             "Integrantes: " +
             (
-                groupData.members.join(', ') ||
+                groupData.members.join(', ')
+                ||
                 "No especificados"
             );
 
-        document.getElementById('displayCaseTag').innerText =
+
+        document
+            .getElementById('displayCaseTag')
+            .innerText =
             `Caso Clínico Asignado: N° ${selectedCaseId}`;
 
 
-        // Renderizar caso
-
         renderCaseContent(selectedCaseId);
-
-
-        // Renderizar secuencia
 
         renderSequenceList();
 
-
-        // Cambiar vista
 
         document
             .getElementById('view-registration')
@@ -797,9 +1154,9 @@
     }
 
 
-    // ============================================================
-    // RENDERIZAR CASO
-    // ============================================================
+    /* ============================================================
+       RENDERIZAR CASO
+       ============================================================ */
 
     function renderCaseContent(caseId) {
 
@@ -812,17 +1169,24 @@
 
 
         html += `
-            <h3 style="color: var(--brand-primary); margin-bottom: 4px;">
+            <h3
+                style="
+                    color: var(--brand-primary);
+                    margin-bottom: 4px;
+                "
+            >
                 ${data.title}
             </h3>
 
-            <div style="
-                font-size: 0.85rem;
-                font-weight: 700;
-                color: var(--brand-accent);
-                text-transform: uppercase;
-                margin-bottom: 16px;
-            ">
+            <div
+                style="
+                    font-size: 0.85rem;
+                    font-weight: 700;
+                    color: var(--brand-accent);
+                    text-transform: uppercase;
+                    margin-bottom: 16px;
+                "
+            >
                 Enfoque: ${data.focus}
             </div>
         `;
@@ -853,10 +1217,9 @@
 
                 </div>
             `;
+
         });
 
-
-        // Tabla
 
         if (data.hasTable) {
 
@@ -875,7 +1238,11 @@
             `;
 
             data.tableHeaders.forEach(header => {
-                html += `<th>${header}</th>`;
+
+                html += `
+                    <th>${header}</th>
+                `;
+
             });
 
             html += `
@@ -892,7 +1259,9 @@
                     <tr>
 
                         <td>
-                            <strong>${row.col1}</strong>
+                            <strong>
+                                ${row.col1}
+                            </strong>
                         </td>
 
                         <td>
@@ -915,17 +1284,17 @@
 
                     </tr>
                 `;
+
             });
 
 
             html += `
                     </tbody>
+
                 </table>
             `;
         }
 
-
-        // Decisión
 
         if (data.decisionPrompt) {
 
@@ -950,17 +1319,17 @@
 
                 </div>
             `;
+
         }
 
-
-        // Consolidación
 
         html += `
             <div class="fill-box">
 
                 <h4 style="margin-bottom: 8px;">
                     <i class="fa-solid fa-key"></i>
-                    Lo aprendido en el Caso (Cierre de Consolidación)
+                    Lo aprendido en el Caso
+                    (Cierre de Consolidación)
                 </h4>
 
                 <p>
@@ -975,9 +1344,9 @@
     }
 
 
-    // ============================================================
-    // RENDERIZAR SECUENCIA
-    // ============================================================
+    /* ============================================================
+       RENDERIZAR SECUENCIA
+       ============================================================ */
 
     function renderSequenceList() {
 
@@ -997,7 +1366,6 @@
 
 
             div.innerHTML = `
-
                 <select
                     class="form-select seq-select"
                     data-code="${item.code}"
@@ -1017,28 +1385,33 @@
 
                 </select>
 
-                <span style="
-                    font-size: 0.9rem;
-                    font-weight: 600;
-                    color: var(--brand-primary);
-                ">
+                <span
+                    style="
+                        font-size: 0.9rem;
+                        font-weight: 600;
+                        color: var(--brand-primary);
+                    "
+                >
                     ${item.name}
                 </span>
             `;
 
 
             container.appendChild(div);
+
         });
     }
 
 
-    // ============================================================
-    // ESCAPE HTML
-    // Evita que las respuestas escritas por el usuario
-    // sean interpretadas como HTML dentro del PDF.
-    // ============================================================
+    /* ============================================================
+       UTILIDADES PARA PDF
+       ============================================================ */
 
-    function escapeHTML(value) {
+    function escapeHtml(value) {
+
+        if (value === null || value === undefined) {
+            return '';
+        }
 
         return String(value)
             .replace(/&/g, '&amp;')
@@ -1049,9 +1422,40 @@
     }
 
 
-    // ============================================================
-    // GENERACIÓN DEL PDF
-    // ============================================================
+    function stripHtml(html) {
+
+        const temp =
+            document.createElement('div');
+
+        temp.innerHTML = html;
+
+        return temp.textContent ||
+               temp.innerText ||
+               '';
+    }
+
+
+    function waitForRender() {
+
+        return new Promise(resolve => {
+
+            requestAnimationFrame(() => {
+
+                requestAnimationFrame(() => {
+
+                    setTimeout(resolve, 300);
+
+                });
+
+            });
+
+        });
+    }
+
+
+    /* ============================================================
+       GENERACIÓN PDF — VERSIÓN CORREGIDA
+       ============================================================ */
 
     async function submitWork() {
 
@@ -1078,18 +1482,26 @@
         }
 
 
-        // --------------------------------------------------------
-        // VERIFICAR QUE HTML2PDF ESTÉ DISPONIBLE
-        // --------------------------------------------------------
-
-        if (typeof html2pdf !== 'function') {
+        if (!selectedCaseId) {
 
             alert(
-                "No se pudo cargar la librería de generación PDF (html2pdf.js). Verifica tu conexión a Internet y vuelve a intentarlo."
+                "No se ha seleccionado un caso clínico."
             );
 
-            console.error(
-                "html2pdf.js no está disponible."
+            return;
+        }
+
+
+        /* --------------------------------------------------------
+           COMPROBAR QUE html2pdf ESTÁ DISPONIBLE
+           -------------------------------------------------------- */
+
+        if (
+            typeof html2pdf === 'undefined'
+        ) {
+
+            alert(
+                "No se pudo cargar la librería de generación PDF. Verifica tu conexión a Internet y vuelve a cargar la página."
             );
 
             return;
@@ -1100,725 +1512,1013 @@
             CASES_DATA[selectedCaseId];
 
 
-        // --------------------------------------------------------
-        // CREAR CONTENEDOR PDF
-        // --------------------------------------------------------
+        /* --------------------------------------------------------
+           BOTÓN
+           -------------------------------------------------------- */
 
-        const pdfWrapper =
-            document.createElement('div');
+        const clickedButton =
+            document.querySelector(
+                '#view-activity .btn-primary'
+            );
 
-
-        /*
-         * IMPORTANTE:
-         *
-         * El elemento se inserta temporalmente en el DOM.
-         * Esto evita problemas de html2canvas al intentar
-         * rasterizar un elemento completamente desconectado
-         * del documento.
-         */
-
-        pdfWrapper.style.position = 'absolute';
-        pdfWrapper.style.left = '-100000px';
-        pdfWrapper.style.top = '0';
-
-        pdfWrapper.style.width = '794px';
-        pdfWrapper.style.minHeight = '1123px';
-
-        pdfWrapper.style.padding = '30px';
-
-        pdfWrapper.style.fontFamily =
-            "'Plus Jakarta Sans', sans-serif";
-
-        pdfWrapper.style.color =
-            '#0f172a';
-
-        pdfWrapper.style.backgroundColor =
-            '#ffffff';
-
-        pdfWrapper.style.boxSizing =
-            'border-box';
+        const originalButtonHTML =
+            clickedButton
+                ? clickedButton.innerHTML
+                : '';
 
 
-        // --------------------------------------------------------
-        // CONSTRUCCIÓN DEL DOCUMENTO
-        // --------------------------------------------------------
+        if (clickedButton) {
 
-        let pdfHTML = `
+            clickedButton.disabled = true;
 
-            <div style="
-                border-bottom: 3px solid #0284c7;
-                padding-bottom: 12px;
-                margin-bottom: 20px;
-            ">
+            clickedButton.innerHTML =
+                '<i class="fa-solid fa-spinner fa-spin"></i> Generando PDF...';
+        }
 
-                <div style="
-                    font-size: 10px;
-                    font-weight: 800;
-                    color: #0284c7;
-                    text-transform: uppercase;
-                ">
-                    Microbiología | Auxiliar de Enfermería
+
+        let pdfWrapper = null;
+
+
+        try {
+
+            /* ----------------------------------------------------
+               CREAR CONTENEDOR PDF
+               ---------------------------------------------------- */
+
+            pdfWrapper =
+                document.createElement('div');
+
+
+            pdfWrapper.id =
+                'pdf-generation-container';
+
+
+            /*
+             * MUY IMPORTANTE:
+             *
+             * No usamos display:none.
+             * No usamos visibility:hidden.
+             *
+             * El elemento debe existir físicamente en el DOM
+             * para que html2canvas pueda pintarlo.
+             */
+
+            pdfWrapper.style.position =
+                'fixed';
+
+            pdfWrapper.style.left =
+                '-100000px';
+
+            pdfWrapper.style.top =
+                '0';
+
+            pdfWrapper.style.width =
+                '794px';
+
+            pdfWrapper.style.minHeight =
+                '1123px';
+
+            pdfWrapper.style.backgroundColor =
+                '#ffffff';
+
+            pdfWrapper.style.padding =
+                '38px';
+
+            pdfWrapper.style.margin =
+                '0';
+
+            pdfWrapper.style.zIndex =
+                '-9999';
+
+            pdfWrapper.style.overflow =
+                'visible';
+
+            pdfWrapper.style.fontFamily =
+                'Arial, Helvetica, sans-serif';
+
+            pdfWrapper.style.color =
+                '#0f172a';
+
+            pdfWrapper.style.boxSizing =
+                'border-box';
+
+
+            /* ----------------------------------------------------
+               CABECERA PDF
+               ---------------------------------------------------- */
+
+            let pdfHTML = `
+
+                <div
+                    style="
+                        border-bottom: 3px solid #0284c7;
+                        padding-bottom: 12px;
+                        margin-bottom: 20px;
+                    "
+                >
+
+                    <div
+                        style="
+                            font-size: 10px;
+                            font-weight: 800;
+                            color: #0284c7;
+                            text-transform: uppercase;
+                        "
+                    >
+                        Microbiología | Auxiliar de Enfermería
+                    </div>
+
+                    <h1
+                        style="
+                            font-size: 20px;
+                            font-weight: 800;
+                            color: #0f172a;
+                            margin: 4px 0;
+                        "
+                    >
+                        Análisis Guiado de Casos Clínicos
+                    </h1>
+
+                    <div
+                        style="
+                            font-size: 11px;
+                            color: #64748b;
+                        "
+                    >
+                        Fecha: 23 de Agosto de 2026 |
+                        Duración: 60 minutos
+                    </div>
+
                 </div>
 
-                <h1 style="
-                    font-size: 20px;
-                    font-weight: 800;
-                    color: #0f172a;
-                    margin: 4px 0;
-                ">
-                    Análisis Guiado de Casos Clínicos
-                </h1>
 
-                <div style="
-                    font-size: 11px;
-                    color: #64748b;
-                ">
-                    Fecha: 23 de Agosto de 2026 |
-                    Duración: 60 minutos
-                </div>
-
-            </div>
-
-
-            <div style="
-                background-color: #f8fafc;
-                border: 1px solid #e2e8f0;
-                border-radius: 8px;
-                padding: 14px;
-                margin-bottom: 20px;
-            ">
-
-                <h3 style="
-                    font-size: 14px;
-                    color: #0f172a;
-                    margin-bottom: 6px;
-                ">
-                    IDENTIFICACIÓN DEL EQUIPO
-                </h3>
-
-                <p style="
-                    font-size: 12px;
-                    margin-bottom: 4px;
-                ">
-                    <strong>Grupo:</strong>
-                    ${escapeHTML(groupData.number)}
-                </p>
-
-                <p style="
-                    font-size: 12px;
-                ">
-                    <strong>Integrantes:</strong>
-                    ${
-                        groupData.members.length
-                            ? groupData.members.map(escapeHTML).join(', ')
-                            : 'Sin especificar'
-                    }
-                </p>
-
-            </div>
-
-
-            <div style="margin-bottom: 24px;">
-
-                <h2 style="
-                    font-size: 15px;
-                    font-weight: 800;
-                    color: #0284c7;
-                    border-bottom: 1px solid #e2e8f0;
-                    padding-bottom: 4px;
-                    margin-bottom: 10px;
-                ">
-                    PARTE I: ${caseData.title}
-                </h2>
-
-                <p style="
-                    font-size: 11px;
-                    color: #64748b;
-                    margin-bottom: 12px;
-                ">
-                    <strong>Enfoque:</strong>
-                    ${caseData.focus}
-                </p>
-
-                <div style="
-                    background-color: #f0f9ff;
-                    border-left: 4px solid #0284c7;
-                    padding: 10px 14px;
-                    font-size: 11px;
-                    color: #0c4a6e;
-                    margin-bottom: 16px;
-                ">
-                    <strong>Situación Clínica:</strong><br>
-                    ${caseData.scenario.replace(/<[^>]*>?/gm, '')}
-                </div>
-        `;
-
-
-        // --------------------------------------------------------
-        // PREGUNTAS
-        // --------------------------------------------------------
-
-        caseData.questions.forEach(question => {
-
-            const element =
-                document.getElementById(question.id);
-
-            const answer =
-                element
-                    ? element.value
-                    : '';
-
-
-            pdfHTML += `
-
-                <div style="
-                    margin-bottom: 14px;
-                    page-break-inside: avoid;
-                ">
-
-                    <p style="
-                        font-size: 11px;
-                        font-weight: 700;
-                        color: #0f172a;
-                        margin-bottom: 4px;
-                    ">
-                        ${question.text}
-                    </p>
-
-                    <div style="
-                        font-size: 11px;
-                        background: #fafafa;
+                <div
+                    style="
+                        background-color: #f8fafc;
                         border: 1px solid #e2e8f0;
-                        padding: 8px 12px;
-                        border-radius: 6px;
-                        min-height: 35px;
-                        color: #334155;
-                    ">
-                        ${
-                            answer
-                                ? escapeHTML(answer).replace(/\n/g, '<br>')
-                                : '<em style="color:#94a3b8">Sin respuesta</em>'
-                        }
-                    </div>
+                        border-radius: 8px;
+                        padding: 14px;
+                        margin-bottom: 20px;
+                    "
+                >
 
-                </div>
-            `;
-        });
+                    <h3
+                        style="
+                            font-size: 14px;
+                            color: #0f172a;
+                            margin-bottom: 6px;
+                        "
+                    >
+                        IDENTIFICACIÓN DEL EQUIPO
+                    </h3>
 
-
-        // --------------------------------------------------------
-        // TABLA
-        // --------------------------------------------------------
-
-        if (caseData.hasTable) {
-
-            pdfHTML += `
-
-                <p style="
-                    font-size: 11px;
-                    font-weight: 700;
-                    margin-top: 14px;
-                    margin-bottom: 6px;
-                ">
-                    Cuadro Comparativo de Análisis:
-                </p>
-
-                <table style="
-                    width: 100%;
-                    border-collapse: collapse;
-                    font-size: 10px;
-                    margin-bottom: 16px;
-                ">
-
-                    <thead>
-
-                        <tr style="
-                            background-color: #f1f5f9;
-                        ">
-            `;
-
-
-            caseData.tableHeaders.forEach(header => {
-
-                pdfHTML += `
-                    <th style="
-                        border: 1px solid #cbd5e1;
-                        padding: 6px;
-                        text-align: left;
-                    ">
-                        ${header}
-                    </th>
-                `;
-            });
-
-
-            pdfHTML += `
-                        </tr>
-                    </thead>
-
-                    <tbody>
-            `;
-
-
-            caseData.tableRows.forEach(row => {
-
-                const element2 =
-                    document.getElementById(row.id2);
-
-                const element3 =
-                    document.getElementById(row.id3);
-
-
-                const val2 =
-                    element2
-                        ? element2.value.trim()
-                        : '';
-
-
-                const val3 =
-                    element3
-                        ? element3.value.trim()
-                        : '';
-
-
-                pdfHTML += `
-
-                    <tr>
-
-                        <td style="
-                            border: 1px solid #cbd5e1;
-                            padding: 6px;
-                        ">
-                            <strong>
-                                ${row.col1}
-                            </strong>
-                        </td>
-
-                        <td style="
-                            border: 1px solid #cbd5e1;
-                            padding: 6px;
-                        ">
-                            ${val2 ? escapeHTML(val2) : '-'}
-                        </td>
-
-                        <td style="
-                            border: 1px solid #cbd5e1;
-                            padding: 6px;
-                        ">
-                            ${val3 ? escapeHTML(val3) : '-'}
-                        </td>
-
-                    </tr>
-                `;
-            });
-
-
-            pdfHTML += `
-                    </tbody>
-
-                </table>
-            `;
-        }
-
-
-        // --------------------------------------------------------
-        // DECISIÓN
-        // --------------------------------------------------------
-
-        if (caseData.decisionPrompt) {
-
-            const decisionElement =
-                document.getElementById('decision_text');
-
-
-            const decisionValue =
-                decisionElement
-                    ? decisionElement.value
-                    : '';
-
-
-            pdfHTML += `
-
-                <div style="
-                    margin-bottom: 14px;
-                    page-break-inside: avoid;
-                ">
-
-                    <p style="
-                        font-size: 11px;
-                        font-weight: 700;
-                        color: #ef4444;
-                        margin-bottom: 4px;
-                    ">
-                        ${caseData.decisionPrompt}
+                    <p
+                        style="
+                            font-size: 12px;
+                            margin-bottom: 4px;
+                        "
+                    >
+                        <strong>Grupo:</strong>
+                        ${escapeHtml(groupData.number)}
                     </p>
 
-                    <div style="
-                        font-size: 11px;
-                        background: #fff5f5;
-                        border: 1px solid #fecaca;
-                        padding: 8px 12px;
-                        border-radius: 6px;
-                        color: #991b1b;
-                    ">
+                    <p style="font-size: 12px;">
+
+                        <strong>Integrantes:</strong>
+
                         ${
-                            decisionValue
-                                ? escapeHTML(decisionValue).replace(/\n/g, '<br>')
-                                : '<em style="color:#94a3b8">Sin decisión registrada</em>'
+                            groupData.members.length
+                                ? escapeHtml(
+                                    groupData.members.join(', ')
+                                  )
+                                : 'Sin especificar'
                         }
-                    </div>
+
+                    </p>
 
                 </div>
+
+
+                <div style="margin-bottom: 24px;">
+
+                    <h2
+                        style="
+                            font-size: 15px;
+                            font-weight: 800;
+                            color: #0284c7;
+                            border-bottom: 1px solid #e2e8f0;
+                            padding-bottom: 4px;
+                            margin-bottom: 10px;
+                        "
+                    >
+                        PARTE I:
+                        ${escapeHtml(caseData.title)}
+                    </h2>
+
+                    <p
+                        style="
+                            font-size: 11px;
+                            color: #64748b;
+                            margin-bottom: 12px;
+                        "
+                    >
+                        <strong>Enfoque:</strong>
+                        ${escapeHtml(caseData.focus)}
+                    </p>
+
+                    <div
+                        style="
+                            background-color: #f0f9ff;
+                            border-left: 4px solid #0284c7;
+                            padding: 10px 14px;
+                            font-size: 11px;
+                            color: #0c4a6e;
+                            margin-bottom: 16px;
+                            line-height: 1.5;
+                        "
+                    >
+
+                        <strong>
+                            Situación Clínica:
+                        </strong>
+
+                        <br>
+
+                        ${escapeHtml(
+                            stripHtml(caseData.scenario)
+                        )}
+
+                    </div>
             `;
-        }
 
 
-        // --------------------------------------------------------
-        // CONSOLIDACIÓN
-        // --------------------------------------------------------
+            /* ----------------------------------------------------
+               PREGUNTAS
+               ---------------------------------------------------- */
 
-        const fillValues = {
-            fill_1: document.getElementById('fill_1')?.value || '',
-            fill_2a: document.getElementById('fill_2a')?.value || '',
-            fill_2b: document.getElementById('fill_2b')?.value || '',
-            fill_3a: document.getElementById('fill_3a')?.value || '',
-            fill_3b: document.getElementById('fill_3b')?.value || '',
-            fill_3c: document.getElementById('fill_3c')?.value || '',
-            fill_4a: document.getElementById('fill_4a')?.value || '',
-            fill_4b: document.getElementById('fill_4b')?.value || ''
-        };
+            caseData.questions.forEach(question => {
+
+                const element =
+                    document.getElementById(
+                        question.id
+                    );
 
 
-        let consolidTextPDF =
-            caseData.consolidationText;
+                const answer =
+                    element
+                        ? element.value.trim()
+                        : '';
 
 
-        Object.keys(fillValues).forEach(id => {
+                pdfHTML += `
 
-            const value =
-                fillValues[id];
+                    <div
+                        style="
+                            margin-bottom: 14px;
+                            page-break-inside: avoid;
+                        "
+                    >
 
-            const pattern =
-                new RegExp(
-                    `<input[^>]*id="${id}"[^>]*>`,
-                    'i'
-                );
+                        <p
+                            style="
+                                font-size: 11px;
+                                font-weight: 700;
+                                color: #0f172a;
+                                margin-bottom: 4px;
+                                line-height: 1.45;
+                            "
+                        >
+                            ${escapeHtml(question.text)}
+                        </p>
+
+                        <div
+                            style="
+                                font-size: 11px;
+                                background: #fafafa;
+                                border: 1px solid #e2e8f0;
+                                padding: 8px 12px;
+                                border-radius: 6px;
+                                min-height: 35px;
+                                color: #334155;
+                                line-height: 1.5;
+                                white-space: normal;
+                                overflow-wrap: break-word;
+                            "
+                        >
+
+                            ${
+                                answer
+                                    ? escapeHtml(answer)
+                                        .replace(/\n/g, '<br>')
+                                    : '<em style="color:#94a3b8">Sin respuesta</em>'
+                            }
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            });
+
+
+            /* ----------------------------------------------------
+               TABLA
+               ---------------------------------------------------- */
+
+            if (caseData.hasTable) {
+
+                pdfHTML += `
+
+                    <p
+                        style="
+                            font-size: 11px;
+                            font-weight: 700;
+                            margin-top: 14px;
+                            margin-bottom: 6px;
+                        "
+                    >
+                        Cuadro Comparativo de Análisis:
+                    </p>
+
+                    <table
+                        style="
+                            width: 100%;
+                            border-collapse: collapse;
+                            font-size: 10px;
+                            margin-bottom: 16px;
+                            page-break-inside: avoid;
+                        "
+                    >
+
+                        <thead>
+
+                            <tr
+                                style="
+                                    background-color: #f1f5f9;
+                                "
+                            >
+                `;
+
+
+                caseData.tableHeaders.forEach(header => {
+
+                    pdfHTML += `
+
+                        <th
+                            style="
+                                border: 1px solid #cbd5e1;
+                                padding: 6px;
+                                text-align: left;
+                                vertical-align: top;
+                            "
+                        >
+                            ${escapeHtml(header)}
+                        </th>
+
+                    `;
+
+                });
+
+
+                pdfHTML += `
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                `;
+
+
+                caseData.tableRows.forEach(row => {
+
+                    const element2 =
+                        document.getElementById(
+                            row.id2
+                        );
+
+                    const element3 =
+                        document.getElementById(
+                            row.id3
+                        );
+
+
+                    const val2 =
+                        element2
+                            ? element2.value.trim()
+                            : '';
+
+                    const val3 =
+                        element3
+                            ? element3.value.trim()
+                            : '';
+
+
+                    pdfHTML += `
+
+                        <tr>
+
+                            <td
+                                style="
+                                    border: 1px solid #cbd5e1;
+                                    padding: 6px;
+                                    vertical-align: top;
+                                "
+                            >
+                                <strong>
+                                    ${escapeHtml(row.col1)}
+                                </strong>
+                            </td>
+
+                            <td
+                                style="
+                                    border: 1px solid #cbd5e1;
+                                    padding: 6px;
+                                    vertical-align: top;
+                                "
+                            >
+                                ${escapeHtml(val2 || '-')}
+                            </td>
+
+                            <td
+                                style="
+                                    border: 1px solid #cbd5e1;
+                                    padding: 6px;
+                                    vertical-align: top;
+                                "
+                            >
+                                ${escapeHtml(val3 || '-')}
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                });
+
+
+                pdfHTML += `
+
+                        </tbody>
+
+                    </table>
+
+                `;
+
+            }
+
+
+            /* ----------------------------------------------------
+               DECISIÓN
+               ---------------------------------------------------- */
+
+            if (caseData.decisionPrompt) {
+
+                const decisionElement =
+                    document.getElementById(
+                        'decision_text'
+                    );
+
+
+                const decisionValue =
+                    decisionElement
+                        ? decisionElement.value.trim()
+                        : '';
+
+
+                pdfHTML += `
+
+                    <div
+                        style="
+                            margin-bottom: 14px;
+                            page-break-inside: avoid;
+                        "
+                    >
+
+                        <p
+                            style="
+                                font-size: 11px;
+                                font-weight: 700;
+                                color: #ef4444;
+                                margin-bottom: 4px;
+                            "
+                        >
+                            ${escapeHtml(
+                                caseData.decisionPrompt
+                            )}
+                        </p>
+
+                        <div
+                            style="
+                                font-size: 11px;
+                                background: #fff5f5;
+                                border: 1px solid #fecaca;
+                                padding: 8px 12px;
+                                border-radius: 6px;
+                                color: #991b1b;
+                                line-height: 1.5;
+                            "
+                        >
+
+                            ${
+                                decisionValue
+                                    ? escapeHtml(
+                                        decisionValue
+                                      ).replace(/\n/g, '<br>')
+                                    : '<em style="color:#94a3b8">Sin decisión registrada</em>'
+                            }
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+
+
+            /* ----------------------------------------------------
+               CONSOLIDACIÓN
+               ---------------------------------------------------- */
+
+            const fillIds = [
+                'fill_1',
+                'fill_2a',
+                'fill_2b',
+                'fill_3a',
+                'fill_3b',
+                'fill_3c',
+                'fill_4a',
+                'fill_4b'
+            ];
+
+
+            const fillValues = {};
+
+
+            fillIds.forEach(id => {
+
+                const element =
+                    document.getElementById(id);
+
+                fillValues[id] =
+                    element
+                        ? element.value.trim()
+                        : '';
+
+            });
+
+
+            let consolidTextPDF =
+                caseData.consolidationText;
+
+
+            const replacements = {
+
+                'fill_1':
+                    fillValues.fill_1,
+
+                'fill_2a':
+                    fillValues.fill_2a,
+
+                'fill_2b':
+                    fillValues.fill_2b,
+
+                'fill_3a':
+                    fillValues.fill_3a,
+
+                'fill_3b':
+                    fillValues.fill_3b,
+
+                'fill_3c':
+                    fillValues.fill_3c,
+
+                'fill_4a':
+                    fillValues.fill_4a,
+
+                'fill_4b':
+                    fillValues.fill_4b
+
+            };
 
 
             consolidTextPDF =
                 consolidTextPDF.replace(
-                    pattern,
-                    `<u><strong>${
-                        value
-                            ? escapeHTML(value)
-                            : '______'
-                    }</strong></u>`
+                    /<input[^>]*id="([^"]+)"[^>]*>/g,
+                    function(match, id) {
+
+                        const value =
+                            replacements[id] || '______';
+
+                        return `
+                            <u>
+                                <strong>
+                                    ${escapeHtml(value)}
+                                </strong>
+                            </u>
+                        `;
+
+                    }
                 );
-        });
 
 
-        pdfHTML += `
-
-            <div style="
-                background-color: #fffbeef5;
-                border-left: 4px solid #f59e0b;
-                padding: 10px 14px;
-                border-radius: 6px;
-                margin-top: 14px;
-                font-size: 11px;
-                color: #78350f;
-                page-break-inside: avoid;
-            ">
-
-                <strong>
-                    Lo aprendido en el Caso
-                    (Cierre de Consolidación):
-                </strong>
-
-                <br>
-
-                ${consolidTextPDF}
-
-            </div>
-
-            </div>
-        `;
+            consolidTextPDF =
+                stripHtml(consolidTextPDF);
 
 
-        // --------------------------------------------------------
-        // PARTE II
-        // --------------------------------------------------------
+            pdfHTML += `
 
-        pdfHTML += `
+                <div
+                    style="
+                        background-color: #fffdf5;
+                        border-left: 4px solid #f59e0b;
+                        padding: 10px 14px;
+                        border-radius: 6px;
+                        margin-top: 14px;
+                        font-size: 11px;
+                        color: #78350f;
+                        line-height: 1.5;
+                        page-break-inside: avoid;
+                    "
+                >
 
-            <div style="
-                margin-top: 24px;
-            ">
+                    <strong>
+                        Lo aprendido en el Caso
+                        (Cierre de Consolidación):
+                    </strong>
 
-                <h2 style="
-                    font-size: 15px;
-                    font-weight: 800;
-                    color: #10b981;
-                    border-bottom: 1px solid #e2e8f0;
-                    padding-bottom: 4px;
-                    margin-bottom: 12px;
-                ">
-                    PARTE II:
-                    Integración y Cierre General de Clase
-                </h2>
+                    <br>
 
+                    ${escapeHtml(consolidTextPDF)}
 
-                <p style="
-                    font-size: 11px;
-                    font-weight: 700;
-                    margin-bottom: 6px;
-                ">
-                    1. Orden Secuencial de la Cadena Preanalítica:
-                </p>
+                </div>
 
-
-                <div style="
-                    font-size: 10px;
-                    background: #f8fafc;
-                    border: 1px solid #e2e8f0;
-                    padding: 10px;
-                    border-radius: 6px;
-                    margin-bottom: 14px;
-                ">
-        `;
+                </div>
+            `;
 
 
-        document
-            .querySelectorAll('.seq-select')
-            .forEach(select => {
+            /* ----------------------------------------------------
+               PARTE II
+               ---------------------------------------------------- */
 
-                const code =
-                    select.getAttribute('data-code');
+            pdfHTML += `
 
-                const position =
-                    select.value || '?';
+                <div
+                    style="
+                        margin-top: 24px;
+                    "
+                >
 
-                const item =
-                    SEQUENCE_ITEMS.find(
-                        item => item.code === code
-                    );
+                    <h2
+                        style="
+                            font-size: 15px;
+                            font-weight: 800;
+                            color: #10b981;
+                            border-bottom: 1px solid #e2e8f0;
+                            padding-bottom: 4px;
+                            margin-bottom: 12px;
+                        "
+                    >
+                        PARTE II:
+                        Integración y Cierre General de Clase
+                    </h2>
+
+                    <p
+                        style="
+                            font-size: 11px;
+                            font-weight: 700;
+                            margin-bottom: 6px;
+                        "
+                    >
+                        1. Orden Secuencial de la Cadena Preanalítica:
+                    </p>
+
+                    <div
+                        style="
+                            font-size: 10px;
+                            background: #f8fafc;
+                            border: 1px solid #e2e8f0;
+                            padding: 10px;
+                            border-radius: 6px;
+                            margin-bottom: 14px;
+                            line-height: 1.6;
+                        "
+                    >
+            `;
 
 
-                if (item) {
+            document
+                .querySelectorAll('.seq-select')
+                .forEach(select => {
+
+                    const code =
+                        select.getAttribute(
+                            'data-code'
+                        );
+
+                    const position =
+                        select.value || '?';
+
+
+                    const item =
+                        SEQUENCE_ITEMS.find(
+                            item =>
+                                item.code === code
+                        );
+
+
+                    if (!item) {
+                        return;
+                    }
+
 
                     pdfHTML += `
 
-                        <span style="
-                            display:inline-block;
-                            margin-right:12px;
-                            margin-bottom:4px;
-                        ">
-
+                        <div
+                            style="
+                                display: block;
+                                margin-bottom: 4px;
+                            "
+                        >
                             <strong>
-                                [ ${position}° ]
+                                [ ${escapeHtml(position)}° ]
                             </strong>
 
-                            ${item.name}
+                            ${escapeHtml(item.name)}
+                        </div>
 
-                        </span>
                     `;
-                }
-            });
+
+                });
 
 
-        pdfHTML += `
+            pdfHTML += `
 
-                </div>
+                    </div>
 
 
-                <div style="
-                    margin-bottom:14px;
-                    page-break-inside: avoid;
-                ">
+                    <div
+                        style="
+                            margin-bottom: 14px;
+                            page-break-inside: avoid;
+                        "
+                    >
 
-                    <p style="
-                        font-size:11px;
-                        font-weight:700;
-                        color:#0f172a;
-                        margin-bottom:4px;
-                    ">
-                        2. Gran Conclusión de Aula:
-                    </p>
+                        <p
+                            style="
+                                font-size: 11px;
+                                font-weight: 700;
+                                color: #0f172a;
+                                margin-bottom: 4px;
+                            "
+                        >
+                            2. Gran Conclusión de Aula:
+                        </p>
 
-                    <div style="
-                        font-size:11px;
-                        background:#fafafa;
-                        border:1px solid #e2e8f0;
-                        padding:8px 12px;
-                        border-radius:6px;
-                        color:#334155;
-                    ">
-                        ${escapeHTML(grandConclusion).replace(/\n/g, '<br>')}
+                        <div
+                            style="
+                                font-size: 11px;
+                                background: #fafafa;
+                                border: 1px solid #e2e8f0;
+                                padding: 8px 12px;
+                                border-radius: 6px;
+                                color: #334155;
+                                line-height: 1.5;
+                            "
+                        >
+                            ${escapeHtml(
+                                grandConclusion
+                            ).replace(/\n/g, '<br>')}
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        style="
+                            margin-bottom: 14px;
+                            page-break-inside: avoid;
+                        "
+                    >
+
+                        <p
+                            style="
+                                font-size: 11px;
+                                font-weight: 700;
+                                color: #0f172a;
+                                margin-bottom: 4px;
+                            "
+                        >
+                            3. Verificación de Premisa
+                            Fundamental (V/F):
+                        </p>
+
+                        <div
+                            style="
+                                font-size: 11px;
+                                background: #f8fafc;
+                                border: 1px solid #e2e8f0;
+                                padding: 8px 12px;
+                                border-radius: 6px;
+                                font-weight: 800;
+                                color: #0f172a;
+                            "
+                        >
+
+                            Respuesta Seleccionada:
+
+                            <span
+                                style="
+                                    color:
+                                    ${
+                                        vfSelection.value === 'VERDADERO'
+                                            ? '#10b981'
+                                            : '#ef4444'
+                                    };
+                                "
+                            >
+                                ${escapeHtml(
+                                    vfSelection.value
+                                )}
+                            </span>
+
+                        </div>
+
                     </div>
 
                 </div>
 
-
-                <div style="
-                    margin-bottom:14px;
-                    page-break-inside: avoid;
-                ">
-
-                    <p style="
-                        font-size:11px;
-                        font-weight:700;
-                        color:#0f172a;
-                        margin-bottom:4px;
-                    ">
-                        3. Verificación de Premisa Fundamental (V/F):
-                    </p>
-
-                    <div style="
-                        font-size:11px;
-                        background:#f8fafc;
-                        border:1px solid #e2e8f0;
-                        padding:8px 12px;
-                        border-radius:6px;
-                        font-weight:800;
-                        color:#0f172a;
-                    ">
-
-                        Respuesta Seleccionada:
-
-                        <span style="
-                            color:${
-                                vfSelection.value === 'VERDADERO'
-                                    ? '#10b981'
-                                    : '#ef4444'
-                            };
-                        ">
-                            ${vfSelection.value}
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </div>
-        `;
+            `;
 
 
-        // --------------------------------------------------------
-        // INSERTAR EN EL DOM
-        // --------------------------------------------------------
+            /* ----------------------------------------------------
+               INSERTAR EN DOM
+               ---------------------------------------------------- */
 
-        pdfWrapper.innerHTML =
-            pdfHTML;
-
-        document.body.appendChild(
-            pdfWrapper
-        );
+            pdfWrapper.innerHTML =
+                pdfHTML;
 
 
-        // --------------------------------------------------------
-        // CONFIGURACIÓN PDF
-        // --------------------------------------------------------
+            /*
+             * ESTE ES EL CAMBIO CRÍTICO.
+             *
+             * Antes:
+             *
+             *     html2pdf().from(pdfWrapper)
+             *
+             * con pdfWrapper fuera del DOM.
+             *
+             * Ahora:
+             *
+             *     document.body.appendChild(pdfWrapper)
+             *
+             * para que html2canvas pueda renderizarlo.
+             */
 
-        const cleanGroupName =
-            groupData.number
-                .replace(/[^a-zA-Z0-9]/g, '_');
+            document
+                .body
+                .appendChild(pdfWrapper);
 
 
-        const opt = {
+            /* ----------------------------------------------------
+               ESPERAR AL RENDERIZADO
+               ---------------------------------------------------- */
 
-            margin: [10, 10, 10, 10],
+            await waitForRender();
 
-            filename:
-                `Microbiologia_${cleanGroupName}_Caso${selectedCaseId}.pdf`,
 
-            image: {
-                type: 'jpeg',
-                quality: 0.98
-            },
+            /* ----------------------------------------------------
+               OPCIONES PDF
+               ---------------------------------------------------- */
 
-            html2canvas: {
+            const cleanGroupName =
+                groupData.number
+                    .replace(
+                        /[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]/g,
+                        '_'
+                    );
 
-                scale: 2,
 
-                useCORS: true,
+            const filename =
+                `Microbiologia_${cleanGroupName}_Caso${selectedCaseId}.pdf`;
 
-                allowTaint: false,
 
-                backgroundColor: '#ffffff',
+            const options = {
 
-                logging: false,
-
-                scrollX: 0,
-
-                scrollY: 0,
-
-                windowWidth:
-                    pdfWrapper.scrollWidth,
-
-                windowHeight:
-                    pdfWrapper.scrollHeight
-            },
-
-            jsPDF: {
-
-                unit: 'mm',
-
-                format: 'a4',
-
-                orientation: 'portrait',
-
-                compress: true
-            },
-
-            pagebreak: {
-
-                mode: [
-                    'css',
-                    'legacy'
+                margin: [
+                    10,
+                    10,
+                    10,
+                    10
                 ],
 
-                avoid: [
-                    '.form-group',
-                    'table',
-                    '.fill-box'
-                ]
-            }
-        };
+                filename: filename,
+
+                image: {
+                    type: 'jpeg',
+                    quality: 0.98
+                },
+
+                html2canvas: {
+
+                    scale: 2,
+
+                    useCORS: true,
+
+                    allowTaint: false,
+
+                    backgroundColor: '#ffffff',
+
+                    logging: false,
+
+                    imageTimeout: 15000,
+
+                    windowWidth: 794,
+
+                    windowHeight:
+                        Math.max(
+                            1123,
+                            pdfWrapper.scrollHeight + 100
+                        )
+
+                },
+
+                jsPDF: {
+
+                    unit: 'mm',
+
+                    format: 'a4',
+
+                    orientation: 'portrait',
+
+                    compress: true
+
+                },
+
+                pagebreak: {
+
+                    mode: [
+                        'css',
+                        'legacy'
+                    ],
+
+                    avoid: [
+                        'table',
+                        '.form-group'
+                    ]
+
+                }
+
+            };
 
 
-        // --------------------------------------------------------
-        // ESPERAR AL CICLO DE RENDERIZADO
-        // --------------------------------------------------------
-
-        await new Promise(resolve => {
-
-            requestAnimationFrame(() => {
-
-                requestAnimationFrame(resolve);
-
-            });
-
-        });
-
-
-        // --------------------------------------------------------
-        // GENERAR PDF
-        // --------------------------------------------------------
-
-        try {
+            /* ----------------------------------------------------
+               GENERAR PDF
+               ---------------------------------------------------- */
 
             await html2pdf()
-                .set(opt)
+                .set(options)
                 .from(pdfWrapper)
                 .save();
+
+
+            /* ----------------------------------------------------
+               LIMPIAR
+               ---------------------------------------------------- */
+
+            if (
+                pdfWrapper &&
+                pdfWrapper.parentNode
+            ) {
+
+                pdfWrapper
+                    .parentNode
+                    .removeChild(pdfWrapper);
+
+            }
+
+
+            /* ----------------------------------------------------
+               RESTAURAR BOTÓN
+               ---------------------------------------------------- */
+
+            if (clickedButton) {
+
+                clickedButton.disabled = false;
+
+                clickedButton.innerHTML =
+                    originalButtonHTML;
+
+            }
 
 
             alert(
                 "¡Documento PDF generado y descargado exitosamente!"
             );
 
+        }
 
-        } catch (error) {
+
+        catch (error) {
 
             console.error(
                 "Error durante la generación del PDF:",
@@ -1826,25 +2526,36 @@
             );
 
 
+            if (
+                pdfWrapper &&
+                pdfWrapper.parentNode
+            ) {
+
+                pdfWrapper
+                    .parentNode
+                    .removeChild(pdfWrapper);
+
+            }
+
+
+            if (clickedButton) {
+
+                clickedButton.disabled = false;
+
+                clickedButton.innerHTML =
+                    originalButtonHTML;
+
+            }
+
+
             alert(
-                "Ocurrió un error al generar el PDF. Revisa la consola del navegador (F12) para conocer el detalle."
+                "No fue posible generar el PDF. Revisa la consola del navegador (F12) para consultar el error técnico."
             );
 
-
-        } finally {
-
-            // ----------------------------------------------------
-            // LIMPIEZA
-            // ----------------------------------------------------
-
-            if (pdfWrapper.parentNode) {
-
-                pdfWrapper.parentNode.removeChild(
-                    pdfWrapper
-                );
-            }
         }
+
     }
+
 </script>
 
 </body>
