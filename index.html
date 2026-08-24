@@ -11,8 +11,8 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- html2pdf -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- jsPDF (generación de PDF con texto real, sin depender de captura de pantalla) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
         :root {
@@ -377,28 +377,6 @@
             transform: none;
         }
 
-        /* OVERLAY GENERACION PDF */
-        .pdf-generating-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: #ffffff;
-            z-index: 999999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-            color: var(--brand-primary);
-            font-weight: 700;
-        }
-
-        .pdf-generating-overlay i {
-            font-size: 1.8rem;
-            color: var(--brand-accent);
-        }
     </style>
 </head>
 
@@ -1495,15 +1473,291 @@
 
 
     /* ============================================================
-       GENERACIÓN DEL PDF
-       
-       ESTA ES LA PARTE CORREGIDA.
+       GENERACIÓN DEL PDF (con jsPDF puro, texto real)
+
+       NOTA IMPORTANTE SOBRE EL CAMBIO DE ENFOQUE:
+
+       La versión anterior usaba html2canvas para "fotografiar" un
+       bloque de HTML oculto y luego incrustar esa foto en el PDF.
+       Ese método es frágil: en muchos navegadores (sobre todo en
+       móviles / webviews) la captura falla en silencio -> no se
+       lanza ningún error, pero el canvas resultante queda vacío,
+       y el PDF se descarga sin ningún contenido dibujado.
+
+       Por eso ahora el PDF se construye con jsPDF directamente,
+       escribiendo texto y formas vectoriales reales en el
+       documento. Esto es mucho más confiable (no depende de que
+       el navegador logre "renderizar y fotografiar" nada), el
+       texto queda seleccionable, y el archivo pesa menos.
     ============================================================ */
 
-    async function submitWork() {
+    /* Paleta de colores en RGB, tomada de las variables CSS de la app */
+    const PDF_COLORS = {
+        primary:  [15, 23, 42],     // --brand-primary
+        accent:   [2, 132, 199],    // --brand-accent
+        emerald:  [16, 185, 129],   // --brand-emerald
+        warning:  [245, 158, 11],   // --brand-warning
+        danger:   [239, 68, 68],    // --brand-danger
+        muted:    [100, 116, 139],  // --text-muted
+        body:     [51, 65, 85],
+        border:   [226, 232, 240],  // --border
+        bgSoft:   [248, 250, 252],  // --bg-main
+        bgAccent: [240, 249, 255],
+        bgWarn:   [255, 251, 235],
+        bgDanger: [255, 245, 245],
+        white:    [255, 255, 255]
+    };
 
-        let pdfWrapper = null;
-        let pdfOverlay = null;
+    /* Construye la clase que maneja cursor, saltos de página y helpers */
+    function createPdfBuilder() {
+
+        const jsPDFCtor =
+            (window.jspdf && window.jspdf.jsPDF) ||
+            window.jsPDF;
+
+        if (!jsPDFCtor) {
+            throw new Error('jsPDF no está disponible.');
+        }
+
+        const doc = new jsPDFCtor({
+            unit: 'mm',
+            format: 'a4',
+            orientation: 'portrait'
+        });
+
+        const margin = 15;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const usableWidth = pageWidth - margin * 2;
+        const bottomLimit = pageHeight - margin;
+
+        let y = margin;
+
+        function ensureSpace(neededHeight) {
+            if (y + neededHeight > bottomLimit) {
+                doc.addPage();
+                y = margin;
+            }
+        }
+
+        function setColor(rgb) {
+            doc.setTextColor(rgb[0], rgb[1], rgb[2]);
+        }
+
+        function addSpacer(h) {
+            y += h;
+        }
+
+        function addRule(color) {
+            ensureSpace(4);
+            doc.setDrawColor(color[0], color[1], color[2]);
+            doc.setLineWidth(0.6);
+            doc.line(margin, y, margin + usableWidth, y);
+            y += 5;
+        }
+
+        function addMainTitle(kicker, title, subtitle) {
+            ensureSpace(26);
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(9);
+            setColor(PDF_COLORS.accent);
+            doc.text(kicker.toUpperCase(), margin, y);
+            y += 6;
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(18);
+            setColor(PDF_COLORS.primary);
+            doc.text(title, margin, y);
+            y += 6;
+
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(9.5);
+            setColor(PDF_COLORS.muted);
+            doc.text(subtitle, margin, y);
+            y += 4;
+
+            addRule(PDF_COLORS.accent);
+            y += 2;
+        }
+
+        function addSectionTitle(text, color) {
+            ensureSpace(12);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(13);
+            setColor(color);
+            doc.text(text, margin, y);
+            y += 3;
+            doc.setDrawColor(color[0], color[1], color[2]);
+            doc.setLineWidth(0.4);
+            doc.line(margin, y, margin + usableWidth, y);
+            y += 7;
+        }
+
+        function addLabel(text, color) {
+            ensureSpace(6);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(10.5);
+            setColor(color || PDF_COLORS.primary);
+            const lines = doc.splitTextToSize(text, usableWidth);
+            lines.forEach(line => {
+                ensureSpace(5.5);
+                doc.text(line, margin, y);
+                y += 5.5;
+            });
+            y += 1;
+        }
+
+        /* Caja de texto con fondo de color, para respuestas, escenarios, etc. */
+        function addBox(text, {
+            fontSize = 10,
+            style = 'normal',
+            textColor = PDF_COLORS.body,
+            fillColor = PDF_COLORS.bgSoft,
+            borderColor = PDF_COLORS.border,
+            emptyPlaceholder = null
+        } = {}) {
+
+            const displayText =
+                (text && text.trim())
+                    ? text
+                    : (emptyPlaceholder || 'Sin respuesta');
+
+            doc.setFont('helvetica', (text && text.trim()) ? style : 'italic');
+            doc.setFontSize(fontSize);
+
+            const innerWidth = usableWidth - 8;
+            const lines = doc.splitTextToSize(displayText, innerWidth);
+            const lineHeight = fontSize * 0.42;
+            const boxHeight = Math.max(lines.length * lineHeight + 6, 12);
+
+            ensureSpace(boxHeight + 4);
+
+            doc.setFillColor(fillColor[0], fillColor[1], fillColor[2]);
+            doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
+            doc.setLineWidth(0.25);
+            doc.rect(margin, y, usableWidth, boxHeight, 'FD');
+
+            setColor((text && text.trim()) ? textColor : PDF_COLORS.muted);
+            let ty = y + lineHeight + 1;
+            lines.forEach(line => {
+                doc.text(line, margin + 4, ty);
+                ty += lineHeight;
+            });
+
+            y += boxHeight + 5;
+        }
+
+        function addTable(headers, rows) {
+
+            const colWidths = [
+                usableWidth * 0.30,
+                usableWidth * 0.35,
+                usableWidth * 0.35
+            ];
+
+            const headerHeight = 8;
+
+            ensureSpace(headerHeight + 12);
+
+            // Encabezado
+            let cx = margin;
+            doc.setFillColor(241, 245, 249);
+            doc.setDrawColor(203, 213, 225);
+            doc.setLineWidth(0.25);
+            doc.rect(margin, y, usableWidth, headerHeight, 'FD');
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(9);
+            setColor(PDF_COLORS.primary);
+
+            headers.forEach((h, i) => {
+                doc.text(h, cx + 2, y + 5.5, { maxWidth: colWidths[i] - 4 });
+                cx += colWidths[i];
+            });
+
+            y += headerHeight;
+
+            // Filas
+            rows.forEach(row => {
+
+                const cellTexts = [row.col1, row.val2 || '-', row.val3 || '-'];
+
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(9);
+
+                const wrapped = cellTexts.map((t, i) =>
+                    doc.splitTextToSize(String(t), colWidths[i] - 4)
+                );
+
+                const rowLines = Math.max(...wrapped.map(w => w.length));
+                const rowHeight = Math.max(rowLines * 4.2 + 4, 9);
+
+                ensureSpace(rowHeight);
+
+                cx = margin;
+                doc.setDrawColor(203, 213, 225);
+                doc.setLineWidth(0.2);
+
+                colWidths.forEach(w => {
+                    doc.rect(cx, y, w, rowHeight);
+                    cx += w;
+                });
+
+                cx = margin;
+                wrapped.forEach((lines, i) => {
+                    doc.setFont('helvetica', i === 0 ? 'bold' : 'normal');
+                    setColor(PDF_COLORS.body);
+                    let ty = y + 5;
+                    lines.forEach(line => {
+                        doc.text(line, cx + 2, ty);
+                        ty += 4.2;
+                    });
+                    cx += colWidths[i];
+                });
+
+                y += rowHeight;
+            });
+
+            y += 5;
+        }
+
+        function getY() {
+            return y;
+        }
+
+        return {
+            doc,
+            margin,
+            usableWidth,
+            ensureSpace,
+            addSpacer,
+            addRule,
+            addMainTitle,
+            addSectionTitle,
+            addLabel,
+            addBox,
+            addTable,
+            getY
+        };
+    }
+
+    /* Convierte el texto de consolidación (con <input> embebidos) en texto
+       plano, reemplazando cada input por el valor que el equipo escribió. */
+    function buildConsolidationPlainText(consolidationHTML) {
+
+        return consolidationHTML.replace(
+            /<input[^>]*id=["']([\w-]+)["'][^>]*>/gi,
+            (match, id) => {
+                const value = getInputValue(id);
+                return value ? `[ ${value} ]` : '[ ______ ]';
+            }
+        )
+        // por si quedara cualquier otra etiqueta HTML residual
+        .replace(/<[^>]+>/g, '');
+    }
+
+    async function submitWork() {
 
         try {
 
@@ -1519,7 +1773,6 @@
                     'input[name="vf_option"]:checked'
                 );
 
-
             if (!grandConclusion || !vfSelection) {
 
                 alert(
@@ -1528,7 +1781,6 @@
 
                 return;
             }
-
 
             if (!selectedCaseId) {
 
@@ -1539,971 +1791,151 @@
                 return;
             }
 
+            const jsPDFAvailable =
+                (window.jspdf && window.jspdf.jsPDF) ||
+                window.jsPDF;
 
-            /* ----------------------------------------------------
-               VERIFICAR HTML2PDF
-            ---------------------------------------------------- */
-
-            if (
-                typeof html2pdf === 'undefined'
-            ) {
+            if (!jsPDFAvailable) {
 
                 alert(
-                    "La librería de generación PDF no pudo cargarse. Verifica tu conexión a Internet y vuelve a intentarlo."
+                    "La librería de generación de PDF no pudo cargarse. Verifica tu conexión a Internet y vuelve a intentarlo."
                 );
 
                 return;
             }
 
+            const caseData = CASES_DATA[selectedCaseId];
 
-            const caseData =
-                CASES_DATA[selectedCaseId];
+            const pdf = createPdfBuilder();
 
+            /* ---------------- ENCABEZADO ---------------- */
 
-            /* ----------------------------------------------------
-               OVERLAY VISUAL MIENTRAS SE GENERA EL PDF
-
-               (Antes el contenedor del PDF se posicionaba con
-               left: -100000px para "esconderlo" fuera de la
-               pantalla. Ese es justamente el origen del PDF en
-               blanco: html2canvas calcula el área a capturar en
-               base al scrollWidth/scrollHeight del documento, y
-               los desplazamientos NEGATIVOS no se incluyen en ese
-               cálculo, así que el contenido terminaba renderizado
-               fuera del lienzo capturado -> canvas vacío -> PDF
-               en blanco.
-
-               La solución es mantener el contenedor del PDF en
-               coordenadas normales/positivas (dentro del área que
-               sí es capturada), y taparlo visualmente con un
-               overlay opaco para que el usuario no vea el "flash"
-               de contenido mientras se genera el documento.)
-            ---------------------------------------------------- */
-
-            pdfOverlay =
-                document.createElement('div');
-
-            pdfOverlay.className =
-                'pdf-generating-overlay';
-
-            pdfOverlay.innerHTML = `
-                <i class="fa-solid fa-file-pdf"></i>
-                <span>Generando tu PDF, por favor espera...</span>
-            `;
-
-            document.body.appendChild(pdfOverlay);
-
-
-            /* ----------------------------------------------------
-               CREAR CONTENEDOR
-            ---------------------------------------------------- */
-
-            pdfWrapper =
-                document.createElement('div');
-
-
-            pdfWrapper.id =
-                'temporary-pdf-document';
-
-
-            /*
-             * IMPORTANTE:
-             *
-             * Se posiciona en coordenadas normales (0,0), dentro
-             * del flujo que html2canvas SÍ captura, y se cubre
-             * visualmente con el overlay de arriba (que tiene un
-             * z-index superior). Así evitamos el bug de canvas
-             * vacío que producían los offsets negativos, sin que
-             * el usuario vea el documento "de fondo".
-             */
-
-
-            pdfWrapper.style.position =
-                'fixed';
-
-        pdfWrapper.style.left =
-                '0';
-
-            pdfWrapper.style.top =
-                '0';
-
-            pdfWrapper.style.width =
-                '794px';
-
-            pdfWrapper.style.minHeight =
-                '1123px';
-
-            pdfWrapper.style.background =
-                '#ffffff';
-
-            pdfWrapper.style.color =
-                '#0f172a';
-
-            pdfWrapper.style.padding =
-                '30px';
-
-            pdfWrapper.style.fontFamily =
-                'Arial, Helvetica, sans-serif';
-
-            pdfWrapper.style.fontSize =
-                '12px';
-
-            pdfWrapper.style.lineHeight =
-                '1.45';
-
-            pdfWrapper.style.zIndex =
-                '999998';
-
-
-            /* ----------------------------------------------------
-               CONSTRUIR HTML PDF
-            ---------------------------------------------------- */
-
-            let pdfHTML = `
-
-                <div
-                    style="
-                        border-bottom: 3px solid #0284c7;
-                        padding-bottom: 12px;
-                        margin-bottom: 20px;
-                    "
-                >
-
-                    <div
-                        style="
-                            font-size: 10px;
-                            font-weight: 800;
-                            color: #0284c7;
-                            text-transform: uppercase;
-                        "
-                    >
-                        Microbiología | Auxiliar de Enfermería
-                    </div>
-
-                    <h1
-                        style="
-                            font-size: 20px;
-                            font-weight: 800;
-                            color: #0f172a;
-                            margin: 4px 0;
-                        "
-                    >
-                        Análisis Guiado de Casos Clínicos
-                    </h1>
-
-                    <div
-                        style="
-                            font-size: 11px;
-                            color: #64748b;
-                        "
-                    >
-                        Fecha: 23 de Agosto de 2026 |
-                        Duración: 60 minutos
-                    </div>
-
-                </div>
-
-
-                <div
-                    style="
-                        background-color: #f8fafc;
-                        border: 1px solid #e2e8f0;
-                        padding: 14px;
-                        margin-bottom: 20px;
-                    "
-                >
-
-                    <h3
-                        style="
-                            font-size: 14px;
-                            color: #0f172a;
-                            margin-bottom: 6px;
-                        "
-                    >
-                        IDENTIFICACIÓN DEL EQUIPO
-                    </h3>
-
-                    <p
-                        style="
-                            font-size: 12px;
-                            margin-bottom: 4px;
-                        "
-                    >
-                        <strong>Grupo:</strong>
-                        ${escapeHTML(groupData.number)}
-                    </p>
-
-                    <p style="font-size: 12px;">
-                        <strong>Integrantes:</strong>
-                        ${
-                            groupData.members.length
-                            ? escapeHTML(
-                                groupData.members.join(', ')
-                            )
-                            : 'Sin especificar'
-                        }
-                    </p>
-
-                </div>
-
-
-                <div style="margin-bottom: 24px;">
-
-                    <h2
-                        style="
-                            font-size: 15px;
-                            font-weight: 800;
-                            color: #0284c7;
-                            border-bottom: 1px solid #e2e8f0;
-                            padding-bottom: 4px;
-                            margin-bottom: 10px;
-                        "
-                    >
-                        PARTE I:
-                        ${escapeHTML(caseData.title)}
-                    </h2>
-
-
-                    <p
-                        style="
-                            font-size: 11px;
-                            color: #64748b;
-                            margin-bottom: 12px;
-                        "
-                    >
-                        <strong>Enfoque:</strong>
-                        ${escapeHTML(caseData.focus)}
-                    </p>
-
-
-                    <div
-                        style="
-                            background-color: #f0f9ff;
-                            border-left: 4px solid #0284c7;
-                            padding: 10px 14px;
-                            font-size: 11px;
-                            color: #0c4a6e;
-                            margin-bottom: 16px;
-                        "
-                    >
-
-                        <strong>Situación Clínica:</strong><br>
-
-                        ${escapeHTML(
-                            stripHTML(caseData.scenario)
-                        )}
-
-                    </div>
-            `;
-
-
-            /* ----------------------------------------------------
-               PREGUNTAS
-            ---------------------------------------------------- */
-
-            caseData.questions.forEach(q => {
-
-                const answer =
-                    getInputValue(q.id);
-
-
-                pdfHTML += `
-
-                    <div
-                        style="
-                            margin-bottom: 14px;
-                            page-break-inside: avoid;
-                        "
-                    >
-
-                        <p
-                            style="
-                                font-size: 11px;
-                                font-weight: 700;
-                                color: #0f172a;
-                                margin-bottom: 4px;
-                            "
-                        >
-                            ${escapeHTML(q.text)}
-                        </p>
-
-
-                        <div
-                            style="
-                                font-size: 11px;
-                                background: #fafafa;
-                                border: 1px solid #e2e8f0;
-                                padding: 8px 12px;
-                                min-height: 35px;
-                                color: #334155;
-                            "
-                        >
-
-                            ${
-                                answer
-                                ? escapeHTMLWithBreaks(answer)
-                                : '<em style="color:#94a3b8">Sin respuesta</em>'
-                            }
-
-                        </div>
-
-                    </div>
-
-                `;
-
-            });
-
-
-            /* ----------------------------------------------------
-               TABLA
-            ---------------------------------------------------- */
-
-            if (caseData.hasTable) {
-
-                pdfHTML += `
-
-                    <p
-                        style="
-                            font-size: 11px;
-                            font-weight: 700;
-                            margin-top: 14px;
-                            margin-bottom: 6px;
-                        "
-                    >
-                        Cuadro Comparativo de Análisis:
-                    </p>
-
-                    <table
-                        style="
-                            width: 100%;
-                            border-collapse: collapse;
-                            font-size: 10px;
-                            margin-bottom: 16px;
-                        "
-                    >
-
-                        <thead>
-
-                            <tr
-                                style="
-                                    background-color: #f1f5f9;
-                                "
-                            >
-                `;
-
-
-                caseData.tableHeaders.forEach(h => {
-
-                    pdfHTML += `
-                        <th
-                            style="
-                                border: 1px solid #cbd5e1;
-                                padding: 6px;
-                                text-align: left;
-                            "
-                        >
-                            ${escapeHTML(h)}
-                        </th>
-                    `;
-
-                });
-
-
-                pdfHTML += `
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                `;
-
-
-                caseData.tableRows.forEach(row => {
-
-                    const val2 =
-                        getInputValue(row.id2);
-
-                    const val3 =
-                        getInputValue(row.id3);
-
-
-                    pdfHTML += `
-
-                        <tr>
-
-                            <td
-                                style="
-                                    border: 1px solid #cbd5e1;
-                                    padding: 6px;
-                                "
-                            >
-                                <strong>
-                                    ${escapeHTML(row.col1)}
-                                </strong>
-                            </td>
-
-                            <td
-                                style="
-                                    border: 1px solid #cbd5e1;
-                                    padding: 6px;
-                                "
-                            >
-                                ${escapeHTML(val2 || '-')}
-                            </td>
-
-                            <td
-                                style="
-                                    border: 1px solid #cbd5e1;
-                                    padding: 6px;
-                                "
-                            >
-                                ${escapeHTML(val3 || '-')}
-                            </td>
-
-                        </tr>
-
-                    `;
-
-                });
-
-
-                pdfHTML += `
-                        </tbody>
-                    </table>
-                `;
-
-            }
-
-
-            /* ----------------------------------------------------
-               DECISIÓN
-            ---------------------------------------------------- */
-
-            if (caseData.decisionPrompt) {
-
-                const decVal =
-                    getInputValue('decision_text');
-
-
-                pdfHTML += `
-
-                    <div
-                        style="
-                            margin-bottom: 14px;
-                            page-break-inside: avoid;
-                        "
-                    >
-
-                        <p
-                            style="
-                                font-size: 11px;
-                                font-weight: 700;
-                                color: #ef4444;
-                                margin-bottom: 4px;
-                            "
-                        >
-                            ${escapeHTML(
-                                caseData.decisionPrompt
-                            )}
-                        </p>
-
-
-                        <div
-                            style="
-                                font-size: 11px;
-                                background: #fff5f5;
-                                border: 1px solid #fecaca;
-                                padding: 8px 12px;
-                                color: #991b1b;
-                            "
-                        >
-
-                            ${
-                                decVal
-                                ? escapeHTMLWithBreaks(decVal)
-                                : '<em style="color:#94a3b8">Sin decisión registrada</em>'
-                            }
-
-                        </div>
-
-                    </div>
-
-                `;
-
-            }
-
-
-            /* ----------------------------------------------------
-               CONSOLIDACIÓN
-            ---------------------------------------------------- */
-
-            let consolidationText =
-                caseData.consolidationText;
-
-
-            const fillIds = [
-                'fill_1',
-                'fill_2a',
-                'fill_2b',
-                'fill_3a',
-                'fill_3b',
-                'fill_3c',
-                'fill_4a',
-                'fill_4b'
-            ];
-
-
-            fillIds.forEach(id => {
-
-                const input =
-                    document.getElementById(id);
-
-
-                if (!input) {
-                    return;
-                }
-
-
-                const value =
-                    input.value.trim();
-
-
-                const safeValue =
-                    escapeHTML(value || '______');
-
-
-                consolidationText =
-                    consolidationText.replace(
-                        input.outerHTML,
-                        `<u><strong>${safeValue}</strong></u>`
-                    );
-
-            });
-
-
-            /*
-             * Como el HTML almacenado puede no coincidir
-             * exactamente con outerHTML del navegador,
-             * hacemos además una sustitución directa
-             * mediante los identificadores.
-             */
-
-            const consolidationInputs = {
-
-                fill_1: getInputValue('fill_1'),
-
-                fill_2a: getInputValue('fill_2a'),
-
-                fill_2b: getInputValue('fill_2b'),
-
-                fill_3a: getInputValue('fill_3a'),
-
-                fill_3b: getInputValue('fill_3b'),
-
-                fill_3c: getInputValue('fill_3c'),
-
-                fill_4a: getInputValue('fill_4a'),
-
-                fill_4b: getInputValue('fill_4b')
-
-            };
-
-
-            Object.entries(consolidationInputs)
-                .forEach(([id, value]) => {
-
-                    const pattern =
-                        new RegExp(
-                            `<input[^>]*id=["']${id}["'][^>]*>`,
-                            'i'
-                        );
-
-
-                    consolidationText =
-                        consolidationText.replace(
-                            pattern,
-                            `<u><strong>${
-                                escapeHTML(value || '______')
-                            }</strong></u>`
-                        );
-
-                });
-
-
-            pdfHTML += `
-
-                    <div
-                        style="
-                            background-color: #fffbeef5;
-                            border-left: 4px solid #f59e0b;
-                            padding: 10px 14px;
-                            margin-top: 14px;
-                            font-size: 11px;
-                            color: #78350f;
-                            page-break-inside: avoid;
-                        "
-                    >
-
-                        <strong>
-                            Lo aprendido en el Caso
-                            (Cierre de Consolidación):
-                        </strong>
-
-                        <br>
-
-                        ${consolidationText}
-
-                    </div>
-
-                </div>
-            `;
-
-
-            /* ----------------------------------------------------
-               PARTE II
-            ---------------------------------------------------- */
-
-            pdfHTML += `
-
-                <div
-                    style="
-                        margin-top: 24px;
-                        page-break-inside: avoid;
-                    "
-                >
-
-                    <h2
-                        style="
-                            font-size: 15px;
-                            font-weight: 800;
-                            color: #10b981;
-                            border-bottom: 1px solid #e2e8f0;
-                            padding-bottom: 4px;
-                            margin-bottom: 12px;
-                        "
-                    >
-                        PARTE II:
-                        Integración y Cierre General de Clase
-                    </h2>
-
-
-                    <p
-                        style="
-                            font-size: 11px;
-                            font-weight: 700;
-                            margin-bottom: 6px;
-                        "
-                    >
-                        1. Orden Secuencial de la Cadena Preanalítica:
-                    </p>
-
-
-                    <div
-                        style="
-                            font-size: 10px;
-                            background: #f8fafc;
-                            border: 1px solid #e2e8f0;
-                            padding: 10px;
-                            margin-bottom: 14px;
-                        "
-                    >
-            `;
-
-
-            document
-                .querySelectorAll('.seq-select')
-                .forEach(sel => {
-
-                    const code =
-                        sel.getAttribute('data-code');
-
-                    const pos =
-                        sel.value || '?';
-
-                    const itemObj =
-                        SEQUENCE_ITEMS.find(
-                            i => i.code === code
-                        );
-
-
-                    pdfHTML += `
-
-                        <span
-                            style="
-                                display:inline-block;
-                                margin-right:12px;
-                                margin-bottom:4px;
-                            "
-                        >
-                            <strong>
-                                [ ${escapeHTML(pos)}° ]
-                            </strong>
-
-                            ${escapeHTML(itemObj.name)}
-
-                        </span>
-
-                    `;
-
-                });
-
-
-            pdfHTML += `
-
-                    </div>
-
-
-                    <div style="margin-bottom:14px;">
-
-                        <p
-                            style="
-                                font-size:11px;
-                                font-weight:700;
-                                color:#0f172a;
-                                margin-bottom:4px;
-                            "
-                        >
-                            2. Gran Conclusión de Aula:
-                        </p>
-
-
-                        <div
-                            style="
-                                font-size:11px;
-                                background:#fafafa;
-                                border:1px solid #e2e8f0;
-                                padding:8px 12px;
-                                color:#334155;
-                            "
-                        >
-                            ${escapeHTMLWithBreaks(
-                                grandConclusion
-                            )}
-                        </div>
-
-                    </div>
-
-
-                    <div style="margin-bottom:14px;">
-
-                        <p
-                            style="
-                                font-size:11px;
-                                font-weight:700;
-                                color:#0f172a;
-                                margin-bottom:4px;
-                            "
-                        >
-                            3. Verificación de Premisa Fundamental (V/F):
-                        </p>
-
-
-                        <div
-                            style="
-                                font-size:11px;
-                                background:#f8fafc;
-                                border:1px solid #e2e8f0;
-                                padding:8px 12px;
-                                font-weight:800;
-                                color:#0f172a;
-                            "
-                        >
-
-                            Respuesta Seleccionada:
-
-                            <strong
-                                style="
-                                    color:
-                                    ${
-                                        vfSelection.value === 'VERDADERO'
-                                        ? '#10b981'
-                                        : '#ef4444'
-                                    };
-                                "
-                            >
-                                ${escapeHTML(
-                                    vfSelection.value
-                                )}
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            `;
-
-
-            /* ----------------------------------------------------
-               INSERTAR REALMENTE EN EL DOM
-            ---------------------------------------------------- */
-
-            pdfWrapper.innerHTML =
-                pdfHTML;
-
-
-            document.body.appendChild(
-                pdfWrapper
+            pdf.addMainTitle(
+                'Microbiología | Auxiliar de Enfermería',
+                'Análisis Guiado de Casos Clínicos',
+                'Fecha: 23 de Agosto de 2026   |   Duración: 60 minutos'
             );
 
+            /* ---------------- EQUIPO ---------------- */
 
-            /* ----------------------------------------------------
-               ESPERAR RENDERIZADO
-            ---------------------------------------------------- */
+            pdf.addBox(
+                `Grupo: ${groupData.number}\n` +
+                `Integrantes: ${groupData.members.length ? groupData.members.join(', ') : 'Sin especificar'}`,
+                { fontSize: 10, fillColor: PDF_COLORS.bgSoft, borderColor: PDF_COLORS.border, textColor: PDF_COLORS.primary }
+            );
 
-            await new Promise(resolve => {
+            pdf.addSpacer(2);
 
-                requestAnimationFrame(() => {
+            /* ---------------- PARTE I ---------------- */
 
-                    requestAnimationFrame(() => {
+            pdf.addSectionTitle(`PARTE I: ${caseData.title}`, PDF_COLORS.accent);
 
-                        resolve();
+            pdf.doc.setFont('helvetica', 'italic');
+            pdf.doc.setFontSize(9.5);
+            pdf.doc.setTextColor(PDF_COLORS.muted[0], PDF_COLORS.muted[1], PDF_COLORS.muted[2]);
+            pdf.ensureSpace(6);
+            pdf.doc.text(`Enfoque: ${caseData.focus}`, pdf.margin, pdf.getY());
+            pdf.addSpacer(6);
 
-                    });
-
-                });
-
+            pdf.addLabel('Situación Clínica:', PDF_COLORS.accent);
+            pdf.addBox(stripHTML(caseData.scenario), {
+                fontSize: 10,
+                fillColor: PDF_COLORS.bgAccent,
+                borderColor: [186, 230, 253],
+                textColor: [12, 74, 110]
             });
 
+            caseData.questions.forEach(q => {
+                pdf.addLabel(q.text, PDF_COLORS.primary);
+                pdf.addBox(getInputValue(q.id), {
+                    fontSize: 10,
+                    fillColor: [250, 250, 250],
+                    borderColor: PDF_COLORS.border,
+                    textColor: PDF_COLORS.body
+                });
+            });
 
-            /* ----------------------------------------------------
-               ESPERAR FUENTES
-            ---------------------------------------------------- */
-
-            if (
-                document.fonts &&
-                document.fonts.ready
-            ) {
-
-                try {
-
-                    await document.fonts.ready;
-
-                } catch (fontError) {
-
-                    console.warn(
-                        'No fue posible esperar las fuentes:',
-                        fontError
-                    );
-
-                }
-
+            if (caseData.hasTable) {
+                pdf.addLabel('Cuadro Comparativo de Análisis:', PDF_COLORS.primary);
+                pdf.addTable(
+                    caseData.tableHeaders,
+                    caseData.tableRows.map(row => ({
+                        col1: row.col1,
+                        val2: getInputValue(row.id2),
+                        val3: getInputValue(row.id3)
+                    }))
+                );
             }
 
+            if (caseData.decisionPrompt) {
+                pdf.addLabel(caseData.decisionPrompt, PDF_COLORS.danger);
+                pdf.addBox(getInputValue('decision_text'), {
+                    fontSize: 10,
+                    fillColor: PDF_COLORS.bgDanger,
+                    borderColor: [254, 202, 202],
+                    textColor: [153, 27, 27],
+                    emptyPlaceholder: 'Sin decisión registrada'
+                });
+            }
 
-            /* ----------------------------------------------------
-               OPCIONES PDF
-            ---------------------------------------------------- */
+            pdf.addLabel('Lo aprendido en el Caso (Cierre de Consolidación):', PDF_COLORS.warning);
+            pdf.addBox(
+                buildConsolidationPlainText(caseData.consolidationText),
+                {
+                    fontSize: 10,
+                    fillColor: PDF_COLORS.bgWarn,
+                    borderColor: [253, 230, 138],
+                    textColor: [120, 53, 15]
+                }
+            );
+
+            pdf.addSpacer(4);
+
+            /* ---------------- PARTE II ---------------- */
+
+            pdf.addSectionTitle('PARTE II: Integración y Cierre General de Clase', PDF_COLORS.emerald);
+
+            pdf.addLabel('1. Orden Secuencial de la Cadena Preanalítica:', PDF_COLORS.primary);
+
+            const sequenceLines = [];
+            document.querySelectorAll('.seq-select').forEach(sel => {
+                const code = sel.getAttribute('data-code');
+                const pos = sel.value || '?';
+                const itemObj = SEQUENCE_ITEMS.find(i => i.code === code);
+                sequenceLines.push(`[ ${pos}° ]  ${itemObj.name}`);
+            });
+            pdf.addBox(sequenceLines.join('\n'), {
+                fontSize: 9.5,
+                fillColor: PDF_COLORS.bgSoft,
+                borderColor: PDF_COLORS.border,
+                textColor: PDF_COLORS.primary
+            });
+
+            pdf.addLabel('2. Gran Conclusión de Aula:', PDF_COLORS.primary);
+            pdf.addBox(grandConclusion, {
+                fontSize: 10,
+                fillColor: [250, 250, 250],
+                borderColor: PDF_COLORS.border,
+                textColor: PDF_COLORS.body
+            });
+
+            pdf.addLabel('3. Verificación de Premisa Fundamental (V/F):', PDF_COLORS.primary);
+            pdf.addBox(`Respuesta seleccionada: ${vfSelection.value}`, {
+                fontSize: 10.5,
+                style: 'bold',
+                fillColor: PDF_COLORS.bgSoft,
+                borderColor: PDF_COLORS.border,
+                textColor: vfSelection.value === 'VERDADERO' ? PDF_COLORS.emerald : PDF_COLORS.danger
+            });
+
+            /* ---------------- GUARDAR ---------------- */
 
             const cleanGroupName =
-                groupData.number
-                    .replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ_-]/g, '_');
+                groupData.number.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ_-]/g, '_');
 
-
-            const opt = {
-
-                margin: [
-                    10,
-                    10,
-                    10,
-                    10
-                ],
-
-                filename:
-                    `Microbiologia_${cleanGroupName}_Caso${selectedCaseId}.pdf`,
-
-                image: {
-                    type: 'jpeg',
-                    quality: 0.98
-                },
-
-                html2canvas: {
-
-                    scale: 2,
-
-                    useCORS: true,
-
-                    allowTaint: false,
-
-                    backgroundColor: '#ffffff',
-
-                    logging: true,
-
-                    imageTimeout: 15000,
-
-                    removeContainer: true,
-
-                    windowWidth: pdfWrapper.scrollWidth,
-
-                    windowHeight: pdfWrapper.scrollHeight
-
-                },
-
-                pagebreak: {
-
-                    mode: [
-                        'css',
-                        'legacy'
-                    ],
-
-                    avoid: [
-                        '.form-group',
-                        'table',
-                        'tr',
-                        '.fill-box'
-                    ]
-
-                },
-
-                jsPDF: {
-
-                    unit: 'mm',
-
-                    format: 'a4',
-
-                    orientation: 'portrait'
-
-                }
-
-            };
-
-
-            /* ----------------------------------------------------
-               GENERAR
-            ---------------------------------------------------- */
-
-            await html2pdf()
-                .set(opt)
-                .from(pdfWrapper)
-                .save();
-
-
-            /* ----------------------------------------------------
-               LIMPIAR
-            ---------------------------------------------------- */
-
-            if (
-                pdfWrapper &&
-                pdfWrapper.parentNode
-            ) {
-
-                pdfWrapper.parentNode.removeChild(
-                    pdfWrapper
-                );
-
-            }
-
-            if (
-                pdfOverlay &&
-                pdfOverlay.parentNode
-            ) {
-
-                pdfOverlay.parentNode.removeChild(
-                    pdfOverlay
-                );
-
-            }
-
+            pdf.doc.save(
+                `Microbiologia_${cleanGroupName}_Caso${selectedCaseId}.pdf`
+            );
 
             alert(
                 "¡Documento PDF generado y descargado exitosamente!"
@@ -2517,35 +1949,6 @@
                 "ERROR GENERANDO PDF:",
                 error
             );
-
-
-            /*
-             * Intentar limpiar el contenedor y el overlay
-             * si ocurrió algún error.
-             */
-
-            if (
-                pdfWrapper &&
-                pdfWrapper.parentNode
-            ) {
-
-                pdfWrapper.parentNode.removeChild(
-                    pdfWrapper
-                );
-
-            }
-
-            if (
-                pdfOverlay &&
-                pdfOverlay.parentNode
-            ) {
-
-                pdfOverlay.parentNode.removeChild(
-                    pdfOverlay
-                );
-
-            }
-
 
             alert(
                 "No fue posible generar el PDF. Abre la consola del navegador (F12) para revisar el error."
